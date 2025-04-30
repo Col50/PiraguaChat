@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el resto del código de la aplicación
 COPY . /app/
 
+COPY tools/* /usr/local/bin
+
 # Exponer el puerto de Django
 EXPOSE 8000
 
