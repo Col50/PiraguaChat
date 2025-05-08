@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'drf.urls'
+ROOT_URLCONF = 'piragua_chat.urls'
 
 TEMPLATES = [
     {
@@ -66,7 +66,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'drf.wsgi.application'
+WSGI_APPLICATION = 'piragua_chat.wsgi.application'
 
 
 # Database
