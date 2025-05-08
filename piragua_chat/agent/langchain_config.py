@@ -2,10 +2,10 @@ import os
 from dotenv import load_dotenv
 from langchain.tools import StructuredTool
 from langchain_google_genai import ChatGoogleGenerativeAI
-from .tools.documents import get_document
-from .tools.physicochemical import get_physicochemical_report
-from .tools.hydrobiological import get_hydrobiological_report
-from .tools.date import get_todays_date
+from piragua_chat.services.documents import get_document
+from piragua_chat.services.physicochemical import get_physicochemical_report
+from piragua_chat.services.hydrobiological import get_hydrobiological_report
+from piragua_chat.services.date import get_todays_date
 
 load_dotenv()
 
