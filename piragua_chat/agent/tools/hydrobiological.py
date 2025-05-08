@@ -4,11 +4,9 @@ from typing import Optional
 
 
 def get_hydrobiological_report(report_id: Optional[str] = None) -> dict:
-    base_url = os.getenv("HYDROBIOLOGICAL_API")
+    base_url = f'{os.getenv("BASE_API_URL")}/hidrobiologicos'
     if not base_url:
-        raise ValueError(
-            "La variable de entorno 'HYDROBIOLOGICAL_API' no está definida."
-        )
+        raise ValueError("Error al conectar con base de datos.")
 
     if not report_id:
         return "Entrada vacía. Por favor, proporcione el nombre de un reporte."

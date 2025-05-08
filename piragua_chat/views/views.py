@@ -5,7 +5,7 @@ from django.http import HttpResponse
 import logging
 
 # Importa el runner del agente desde tu nueva estructura
-from apps.agent.agent_runner import process_query
+from piragua_chat.agent.agent_runner import process_query
 
 logger = logging.getLogger(__name__)
 

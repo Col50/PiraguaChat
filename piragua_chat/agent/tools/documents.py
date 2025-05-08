@@ -4,9 +4,9 @@ from typing import Optional
 
 
 def get_document(titulo: Optional[str] = None, año: Optional[int] = None) -> dict:
-    base_url = os.getenv("DOCUMENT_API")
+    base_url = f'{os.getenv("BASE_API_URL")}/documentos'
     if not base_url:
-        raise ValueError("La variable de entorno 'DOCUMENT_API' no está definida.")
+        raise ValueError("Error al conectar con base de datos.")
 
     params = {}
     if titulo:
