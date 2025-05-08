@@ -31,7 +31,10 @@ SECRET_KEY = "django-insecure-qi+tejjc2dpw%(s^gm(2@c6a&sxi*c@)%+b9l%+ym^_yxx+ce+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+]
 
 
 print("DEBUG =", DEBUG)
@@ -46,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apps"
+    "apps",
 ]
 
 MIDDLEWARE = [
@@ -90,7 +93,7 @@ DATABASES = {
         "PASSWORD": os.environ.get("DB_PASSWORD"),
         "HOST": os.environ.get("DB_HOST"),
         "PORT": os.environ.get("DB_PORT"),
-    } 
+    }
 }
 
 
