@@ -88,11 +88,11 @@ WSGI_APPLICATION = "piragua_chat.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT"),
+        "NAME": os.environ.get("DB_NAME", default="piraguaChat"),
+        "USER": os.environ.get("DB_USER", default="admin"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", default="admin123"),
+        "HOST": os.environ.get("DB_HOST", default="localhost"),
+        "PORT": os.environ.get("DB_PORT", default="5432"),
     }
 }
 
