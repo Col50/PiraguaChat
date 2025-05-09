@@ -1,2 +1,2 @@
-from .preguntas import Pregunta
-from .historial_mensaje import HistorialMensaje
+from .links import Links
+from .historial_mensaje import Historial_Mensaje
