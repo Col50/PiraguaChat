@@ -44,7 +44,8 @@ print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",
-    "piragua_chat_settings",
+    "django_db_prefix",
+    "piragua_chat",
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,8 @@ WSGI_APPLICATION = "piragua_chat_settings.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+DB_PREFIX = os.environ.get("DB_PREFIX", "piragua_chat_")
 
 DATABASES = {
     "default": {
