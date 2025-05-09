@@ -1,39 +1,19 @@
 import os
 from dotenv import load_dotenv
-from langchain.tools import StructuredTool
+
 from langchain_google_genai import ChatGoogleGenerativeAI
-from piragua_chat.services.documents import get_document
-from piragua_chat.services.physicochemical import get_physicochemical_report
-from piragua_chat.services.hydrobiological import get_hydrobiological_report
-from piragua_chat.services.date import get_todays_date
+from piragua_chat.agent.tools.get_document_tool import get_document_tool
+from piragua_chat.agent.tools.get_physicochemical_report_tool import (
+    get_physicochemical_report_tool,
+)
+from piragua_chat.agent.tools.get_hydrobiological_report_tool import (
+    get_hydrobiological_report_tool,
+)
+from piragua_chat.agent.tools.get_todays_date_tool import get_todays_date_tool
 
 load_dotenv()
 
 # === Tools ===
-get_document_tool = StructuredTool.from_function(
-    func=get_document,
-    name="buscar_documentos_func",
-    description="Busca documentos por título y opcionalmente por año.",
-)
-
-get_physicochemical_report_tool = StructuredTool.from_function(
-    func=get_physicochemical_report,
-    name="descargar_reporte_fisicoquimicos",
-    description="Devuelve el enlace de descarga del reporte físico-químico.",
-)
-
-get_hydrobiological_report_tool = StructuredTool.from_function(
-    func=get_hydrobiological_report,
-    name="descargar_reporte_hidrobiologico",
-    description="Devuelve el enlace de descarga del reporte hidrobiológico.",
-)
-
-get_todays_date_tool = StructuredTool.from_function(
-    func=get_todays_date,
-    name="obtener_fecha_hoy",
-    description="Devuelve la fecha y el día actual.",
-)
-
 tools = [
     get_document_tool,
     get_physicochemical_report_tool,

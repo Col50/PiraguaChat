@@ -27,5 +27,8 @@ class LangchainAgentView(APIView):
         except Exception as e:
             logger.error("Error en el agente LangChain: %s", str(e))
             return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {
+                    "error": "Ocurrió un error interno. Por favor, inténtelo de nuevo más tarde."
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

@@ -3,4 +3,11 @@ import datetime
 
 def get_todays_date() -> str:
     today = datetime.datetime.now()
-    return f"Hoy es {today.strftime('%A')}, {today.strftime('%Y-%m-%d')}"
+    return {
+        "year": today.year,
+        "month": today.month,
+        "day": today.day,
+        "dayOfTheWeek": today.strftime(
+            "%A"
+        ),  # This will return the day in the current locale
+    }

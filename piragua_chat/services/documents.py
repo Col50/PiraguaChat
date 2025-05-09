@@ -3,16 +3,16 @@ import requests
 from typing import Optional
 
 
-def get_document(titulo: Optional[str] = None, año: Optional[int] = None) -> dict:
+def get_document(
+    searchString: Optional[str] = None, year: Optional[int] = None
+) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/documentos'
-    if not base_url:
-        raise ValueError("Error al conectar con base de datos.")
 
     params = {}
-    if titulo:
-        params["search"] = titulo.strip().strip('"').strip("'")
-    if año:
-        params["search"] = año
+    if searchString:
+        params["search"] = searchString.strip().strip('"').strip("'")
+    if year:
+        params["search"] = year
 
     try:
         response = requests.get(base_url, params=params)

@@ -4,8 +4,6 @@ import requests
 
 def get_physicochemical_report(report_id: str) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/fisicoquimicos'
-    if not base_url:
-        raise ValueError("Error al conectar con base de datos.")
 
     if not report_id.strip():
         return "Entrada vacía. Por favor, proporcione el ID de un reporte."

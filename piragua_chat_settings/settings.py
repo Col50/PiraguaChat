@@ -43,6 +43,8 @@ print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 # Application definition
 
 INSTALLED_APPS = [
+    "django.contrib.contenttypes",
+    "django.contrib.auth",
     "django.contrib.staticfiles",
     "django_db_prefix",
     "piragua_chat_settings",
