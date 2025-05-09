@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.auth",
     "django.contrib.staticfiles",
-    "django_db_prefix",
     "piragua_chat_settings",
 ]
 
@@ -82,7 +81,6 @@ WSGI_APPLICATION = "piragua_chat_settings.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DB_PREFIX = os.environ.get("DB_PREFIX", "piragua_chat_")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
