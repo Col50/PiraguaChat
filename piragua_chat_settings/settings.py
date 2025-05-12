@@ -36,10 +36,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
-
-print("DEBUG =", DEBUG)
-print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
-
 # Application definition
 
 INSTALLED_APPS = [
