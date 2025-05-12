@@ -44,7 +44,6 @@ print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",
-    "django_db_prefix",
     "piragua_chat",
 ]
 
