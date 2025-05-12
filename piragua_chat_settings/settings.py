@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-qi+tejjc2dpw%(s^gm(2@c6a&sxi*c@)%+b9l%+ym^_yxx+ce+"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     # "django.contrib.contenttypes",
     # "django.contrib.auth",
     "django.contrib.staticfiles",
-    "piragua_chat_settings",
+    "piragua_chat",
 ]
 
 MIDDLEWARE = [
@@ -76,6 +76,8 @@ WSGI_APPLICATION = "piragua_chat_settings.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+DB_PREFIX = os.environ.get("DB_PREFIX", "piragua_chat_")
 
 DATABASES = {
     "default": {
