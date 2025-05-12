@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.physicochemical import get_physicochemical_report
+from piragua_chat.services.physicochemical_service import get_physicochemical_report
 
 get_physicochemical_report_tool = StructuredTool.from_function(
     func=get_physicochemical_report,

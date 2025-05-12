@@ -10,6 +10,9 @@ import requests
 logger = logging.getLogger(__name__)
 
 from piragua_chat.models.history_message import Historial_Mensaje
+from piragua_chat.views.langchain_agent_view import (
+    handle_agent_query,
+)  # Importar la función reutilizable
 
 
 class WhatsAppWebhookView(APIView):
@@ -19,9 +22,6 @@ class WhatsAppWebhookView(APIView):
 
         logger.info(f"Mensaje de WhatsApp recibido: {from_number} - {body}")
 
-        query_data = {"query": body, "from_number": from_number}
-        query_url = "http://localhost:8000/agent/"
-
         try:
             # Guardar el mensaje del usuario en la base de datos
             Historial_Mensaje.objects.create(
@@ -30,13 +30,8 @@ class WhatsAppWebhookView(APIView):
                 mensaje=body,
             )
 
-            # Enviar la consulta al agente
-            response = requests.post(query_url, json=query_data)
-            response_data = response.json()
-            if response.status_code == 200:
-                result = response_data.get("response", "No se pudo obtener respuesta.")
-            else:
-                result = "Error al procesar la consulta."
+            # Llamar directamente a la lógica del agente
+            result = handle_agent_query(body, from_number)
 
             # Guardar la respuesta generada por la IA en la base de datos
             Historial_Mensaje.objects.create(
@@ -46,6 +41,6 @@ class WhatsAppWebhookView(APIView):
             )
 
         except Exception as e:
-            result = f"Error al contactar el servidor de consultas: {str(e)}"
+            result = f"Error al procesar la consulta: {str(e)}"
 
         return Response({"reply": result}, status=status.HTTP_200_OK)

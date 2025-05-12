@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.documents import get_document
+from piragua_chat.services.documents_service import get_document
 
 get_document_tool = StructuredTool.from_function(
     func=get_document,

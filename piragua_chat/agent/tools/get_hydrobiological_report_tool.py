@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.hydrobiological import get_hydrobiological_report
+from piragua_chat.services.hydrobiological_service import get_hydrobiological_report
 
 get_hydrobiological_report_tool = StructuredTool.from_function(
     func=get_hydrobiological_report,
