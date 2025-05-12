@@ -7,6 +7,9 @@ import logging
 # Importa el runner del agente desde tu nueva estructura
 from piragua_chat.agent.agent_runner import process_query
 
+from piragua_chat.models.history_message import Historial_Mensaje
+
+
 logger = logging.getLogger(__name__)
 
 
