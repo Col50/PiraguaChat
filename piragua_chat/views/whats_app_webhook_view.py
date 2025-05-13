@@ -5,6 +5,8 @@ from django.http import HttpResponse
 import logging
 import requests
 
+from piragua_chat.agent.agent_runner import process_query
+
 # Importa el runner del agente desde tu nueva estructura
 
 logger = logging.getLogger(__name__)
@@ -14,31 +16,26 @@ from piragua_chat.views.langchain_agent_view import (
     handle_agent_query,
 )  # Importar la función reutilizable
 
+from piragua_chat.services.message_history_service import (
+    MessageHistoryService,
+)  # Asumiendo que ahí defines la clase
+
 
 class WhatsAppWebhookView(APIView):
     def post(self, request):
-        from_number = request.data.get("From", "")
+        phone_number = request.data.get("From", "")
         body = request.data.get("Body", "").strip()
 
-        logger.info(f"Mensaje de WhatsApp recibido: {from_number} - {body}")
+        logger.info(f"Mensaje de WhatsApp recibido: {phone_number} - {body}")
 
         try:
             # Guardar el mensaje del usuario en la base de datos
-            History_Message.objects.create(
-                phone_number=from_number,
-                user_type="persona",
-                message=body,
-            )
+            message_history = MessageHistoryService(phone_number)
 
             # Llamar directamente a la lógica del agente
-            result = handle_agent_query(body, from_number)
+            result = process_query(body, message_history)
 
             # Guardar la respuesta generada por la IA en la base de datos
-            History_Message.objects.create(
-                phone_number=from_number,
-                user_type="ai",
-                message=result,
-            )
 
         except Exception as e:
             result = f"Error al procesar la consulta: {str(e)}"

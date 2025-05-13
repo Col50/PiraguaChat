@@ -5,7 +5,6 @@ from django.http import HttpResponse
 import logging
 
 # Importa el runner del agente desde tu nueva estructura
-from piragua_chat.agent.agent_runner import process_query
 
 from piragua_chat.models.history_message import History_Message
 from datetime import datetime, timedelta
@@ -33,6 +32,7 @@ def handle_agent_query(query, from_number):
         # Agregar el contexto al query
         query_con_contexto = f"{contexto}\nUsuario: {query}"
         # Procesar la consulta con el contexto
+
         result = process_query(query_con_contexto)
         return result
     except Exception as e:

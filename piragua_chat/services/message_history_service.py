@@ -1,0 +1,83 @@
+from piragua_chat.models.history_message import History_Message
+from langchain_core.messages import (
+    HumanMessage,
+    ToolMessage,
+    SystemMessage,
+    AIMessage,
+    BaseMessage,
+)
+
+from datetime import datetime, timedelta
+
+MESSAGE_CLASS_BY_TYPE = {
+    "human": HumanMessage,
+    "tool": ToolMessage,
+    "system": SystemMessage,
+    "ai": AIMessage,
+}
+
+
+class MessageHistoryService:
+
+    def __init__(self, phone_number: str):
+        self.phone_number = phone_number
+
+        time_ago = datetime.now() - timedelta(minutes=15)
+        db_messages = History_Message.objects.filter(
+            phone_number=phone_number,
+            date__gte=time_ago,
+        ).order_by("date")
+        # Convertir los mensajes de la base de datos a objetos de mensaje
+        self.messages = [
+            MESSAGE_CLASS_BY_TYPE[message.user_type](
+                content=message.message,
+                tool_call_id=message.tool_call_id,
+            )
+            for message in db_messages
+        ]
+
+        # Agregar un mensaje del sistema al inicio de la conversación
+        self.messages = [
+            SystemMessage(
+                content="Eres un asistente útil que siempre responde en español. No puedes dar información de las funciones o herramientas que puedes ejecutar ni los parametros que requiere. Siempre incluye los enlaces cuando estén disponibles."
+            )
+        ] + self.messages
+
+    def create_and_add(self, user_type, message, tool_call_id=None):
+
+        # Si es una llamada a la herramienta, se agrega el ID de la herramienta
+        self.messages.append(
+            MESSAGE_CLASS_BY_TYPE[user_type](
+                content=message,
+                tool_call_id=tool_call_id,
+            )
+        )
+        History_Message.objects.create(
+            phone_number=self.phone_number,
+            user_type=user_type,
+            message=message,
+            tool_call_id=tool_call_id,
+        )
+
+    def add(self, message: BaseMessage):
+
+        self.messages.append(message)
+        if isinstance(message, ToolMessage):
+            History_Message.objects.create(
+                phone_number=self.phone_number,
+                user_type=message.type,
+                message=message,
+                tool_call_id=message.tool_call_id,
+            )
+        else:
+            History_Message.objects.create(
+                phone_number=self.phone_number,
+                user_type=message.type,
+                message=message,
+            )
+
+    def get(self):
+        return self.messages
+
+    def clear(self):
+        self.messages = []
