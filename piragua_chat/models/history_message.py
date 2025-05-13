@@ -3,7 +3,7 @@ from django.db import models
 
 class History_Message(models.Model):
     USER_TYPE_CHOICES = [
-        ("Persona", "Human"),
+        ("Human", "Human"),
         ("AI", "AI"),
     ]
     phone_number = models.CharField(max_length=20)
