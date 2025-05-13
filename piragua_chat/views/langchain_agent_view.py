@@ -7,7 +7,7 @@ import logging
 # Importa el runner del agente desde tu nueva estructura
 from piragua_chat.agent.agent_runner import process_query
 
-from piragua_chat.models.history_message import Historial_Mensaje
+from piragua_chat.models.history_message import History_Message
 from datetime import datetime, timedelta
 
 
@@ -21,14 +21,14 @@ def handle_agent_query(query, from_number):
     try:
         # Obtener mensajes del mismo número de celular en los últimos 15 minutos
         time_ago = datetime.now() - timedelta(minutes=15)
-        recent_history = Historial_Mensaje.objects.filter(
-            numero_celular=from_number,
-            hora__gte=time_ago,
-        ).order_by("hora")
+        recent_history = History_Message.objects.filter(
+            phone_number=from_number,
+            date__gte=time_ago,
+        ).order_by("date")
 
         # Construir el contexto a partir del historial reciente
         contexto = "\n".join(
-            [f"{mensaje.tipo_usuario}: {mensaje.mensaje}" for mensaje in recent_history]
+            [f"{mensaje.user_type}: {mensaje.message}" for mensaje in recent_history]
         )
         # Agregar el contexto al query
         query_con_contexto = f"{contexto}\nUsuario: {query}"

@@ -9,7 +9,7 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-from piragua_chat.models.history_message import Historial_Mensaje
+from piragua_chat.models.history_message import History_Message
 from piragua_chat.views.langchain_agent_view import (
     handle_agent_query,
 )  # Importar la función reutilizable
@@ -24,20 +24,20 @@ class WhatsAppWebhookView(APIView):
 
         try:
             # Guardar el mensaje del usuario en la base de datos
-            Historial_Mensaje.objects.create(
-                numero_celular=from_number,
-                tipo_usuario="persona",
-                mensaje=body,
+            History_Message.objects.create(
+                phone_number=from_number,
+                user_type="persona",
+                message=body,
             )
 
             # Llamar directamente a la lógica del agente
             result = handle_agent_query(body, from_number)
 
             # Guardar la respuesta generada por la IA en la base de datos
-            Historial_Mensaje.objects.create(
-                numero_celular=from_number,
-                tipo_usuario="ai",
-                mensaje=result,
+            History_Message.objects.create(
+                phone_number=from_number,
+                user_type="ai",
+                message=result,
             )
 
         except Exception as e:
