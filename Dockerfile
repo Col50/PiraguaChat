@@ -17,7 +17,7 @@ RUN apk update && apk add --no-cache \
 RUN python -m venv .venv
 
 COPY requirements.txt /app/
-RUN  . venv/bin/activate && pip install -r requirements.txt
+RUN  . .venv/bin/activate && pip install -r requirements.txt
 
 # Copy project files
 COPY . /app/
