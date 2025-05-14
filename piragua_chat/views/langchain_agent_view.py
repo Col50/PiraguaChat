@@ -53,7 +53,8 @@ class LangchainAgentView(APIView):
         try:
             result = handle_agent_query(query, from_number)
             return Response({"response": result}, status=status.HTTP_200_OK)
-        except Exception:
+        except Exception as e:
+            logger.error("Error al procesar la consulta: %s", str(e))
             return Response(
                 {
                     "error": "Ocurrió un error interno. Por favor, inténtelo de nuevo más tarde."

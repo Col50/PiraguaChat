@@ -1,3 +1,5 @@
+import json
+from json import tool
 from piragua_chat.models.history_message import History_Message
 from langchain_core.messages import (
     HumanMessage,
@@ -6,14 +8,15 @@ from langchain_core.messages import (
     AIMessage,
     BaseMessage,
 )
+from piragua_chat.enum.message_type import MessageType
 
 from datetime import datetime, timedelta
 
 MESSAGE_CLASS_BY_TYPE = {
-    "human": HumanMessage,
-    "tool": ToolMessage,
-    "system": SystemMessage,
-    "ai": AIMessage,
+    MessageType.HUMAN.value: HumanMessage,
+    MessageType.TOOL.value: ToolMessage,
+    MessageType.SYSTEM.value: SystemMessage,
+    MessageType.AI.value: AIMessage,
 }
 
 
@@ -29,11 +32,11 @@ class MessageHistoryService:
         ).order_by("date")
         # Convertir los mensajes de la base de datos a objetos de mensaje
         self.messages = [
-            MESSAGE_CLASS_BY_TYPE[message.user_type](
-                content=message.message,
-                tool_call_id=message.tool_call_id,
+            MESSAGE_CLASS_BY_TYPE[db_message.user_type](
+                **json.loads(db_message.message),
+                tool_call_id=db_message.tool_call_id,
             )
-            for message in db_messages
+            for db_message in db_messages
         ]
 
         # Agregar un mensaje del sistema al inicio de la conversación
@@ -55,7 +58,7 @@ class MessageHistoryService:
         History_Message.objects.create(
             phone_number=self.phone_number,
             user_type=user_type,
-            message=message,
+            message=json.dumps({"content": message}),
             tool_call_id=tool_call_id,
         )
 
@@ -66,14 +69,25 @@ class MessageHistoryService:
             History_Message.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
-                message=message,
+                message=json.dumps({"content": message.content}),
                 tool_call_id=message.tool_call_id,
+            )
+        elif isinstance(message, AIMessage):
+            History_Message.objects.create(
+                phone_number=self.phone_number,
+                user_type=message.type,
+                message=json.dumps(
+                    {
+                        "content": message.content,
+                        "tool_calls": message.tool_calls,
+                    }
+                ),
             )
         else:
             History_Message.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
-                message=message,
+                message=json.dumps({"content": message.content}),
             )
 
     def get(self):

@@ -17,4 +17,4 @@ def get_hydrobiological_report(report_id: Optional[str] = None) -> dict:
         response.raise_for_status()
         return {"report_id": report_id, "url": url}
     except requests.RequestException as e:
-        raise ValueError(f"No se pudo encontrar el reporte hidrobiológico: {e}")
+        return f"No se pudo encontrar el reporte hidrobiológico: {e}"

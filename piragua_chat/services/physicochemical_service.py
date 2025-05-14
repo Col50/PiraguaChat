@@ -16,4 +16,4 @@ def get_physicochemical_report(report_id: str) -> dict:
         response.raise_for_status()
         return {"report_id": report_id, "url": url}
     except requests.RequestException as e:
-        raise ValueError(f"No se pudo encontrar el reporte físico-químico: {e}")
+        return f"No se pudo encontrar el reporte físico-químico:"
