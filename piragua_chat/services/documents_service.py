@@ -4,13 +4,13 @@ from typing import Optional
 
 
 def get_document(
-    searchString: Optional[str] = None, year: Optional[int] = None
+    search_string: Optional[str] = None, year: Optional[int] = None
 ) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/documentos'
 
     params = {}
-    if searchString:
-        params["search"] = searchString.strip().strip('"').strip("'")
+    if search_string:
+        params["search"] = search_string.strip().strip('"').strip("'")
     if year:
         params["search"] = year
 

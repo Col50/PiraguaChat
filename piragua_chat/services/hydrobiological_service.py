@@ -7,7 +7,7 @@ def get_hydrobiological_report(report_id: Optional[str] = None) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/hidrobiologicos'
 
     if not report_id:
-        return "Entrada vacía. Por favor, proporcione el nombre de un reporte."
+        return "Entrada vacía. Por favor, proporcione el codigo de un reporte."
 
     report_id = report_id.strip().strip('"').strip("'").upper()
     url = f"{base_url}/{report_id}/reporte"

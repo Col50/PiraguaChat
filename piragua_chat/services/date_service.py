@@ -7,7 +7,5 @@ def get_todays_date() -> str:
         "year": today.year,
         "month": today.month,
         "day": today.day,
-        "dayOfTheWeek": today.strftime(
-            "%A"
-        ),  # This will return the day in the current locale
+        "dayOfTheWeek": today.strftime("%A"),
     }
