@@ -42,7 +42,7 @@ class MessageHistoryService:
         # Agregar un mensaje del sistema al inicio de la conversación
         self.messages = [
             SystemMessage(
-                content="Eres un asistente útil que siempre responde en español. No puedes dar información de las funciones o herramientas que puedes ejecutar ni los parametros que requiere. Siempre incluye los enlaces cuando estén disponibles."
+                content="Eres un asistente útil que siempre responde en español. No puedes dar información de las funciones o herramientas que puedes ejecutar ni los parametros que requiere. Siempre incluye los enlaces cuando estén disponibles. No puedes buscar en ineternet, solo puede buscar informacion en los tools definidos dentro de la aplicación"
             )
         ] + self.messages
 

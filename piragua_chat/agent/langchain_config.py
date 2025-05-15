@@ -9,6 +9,7 @@ from piragua_chat.agent.tools.get_hydrobiological_report_tool import (
     get_hydrobiological_report_tool,
 )
 from piragua_chat.agent.tools.get_todays_date_tool import get_todays_date_tool
+from piragua_chat.agent.tools.get_faq_tool import get_faq_tool  # <-- NUEVO
 
 from langchain_openai import ChatOpenAI
 
@@ -20,6 +21,7 @@ tools = [
     get_physicochemical_report_tool,
     get_hydrobiological_report_tool,
     get_todays_date_tool,
+    get_faq_tool,  # <-- NUEVO
 ]
 
 tool_list = {tool.name: tool for tool in tools}
