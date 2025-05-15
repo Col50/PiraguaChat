@@ -3,7 +3,7 @@ import requests
 from typing import Optional
 
 
-def get_hydrobiological_report(report_id: Optional[str] = None) -> dict:
+def get_hydrobiological_report(report_id: str) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/hidrobiologicos'
 
     if not report_id:
