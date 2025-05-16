@@ -11,7 +11,7 @@ from piragua_chat.agent.agent_runner import process_query
 
 logger = logging.getLogger(__name__)
 
-from piragua_chat.models.history_message import History_Message
+from piragua_chat.models.history_message import HistoryMessage
 from piragua_chat.views.langchain_agent_view import (
     handle_agent_query,
 )  # Importar la función reutilizable

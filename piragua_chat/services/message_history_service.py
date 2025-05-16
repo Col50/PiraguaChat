@@ -1,6 +1,6 @@
 import json
 from json import tool
-from piragua_chat.models.history_message import History_Message
+from piragua_chat.models.history_message import HistoryMessage
 from langchain_core.messages import (
     HumanMessage,
     ToolMessage,
@@ -26,7 +26,7 @@ class MessageHistoryService:
         self.phone_number = phone_number
 
         time_ago = datetime.now() - timedelta(minutes=15)
-        db_messages = History_Message.objects.filter(
+        db_messages = HistoryMessage.objects.filter(
             phone_number=phone_number,
             date__gte=time_ago,
         ).order_by("date")
@@ -55,7 +55,7 @@ class MessageHistoryService:
                 tool_call_id=tool_call_id,
             )
         )
-        History_Message.objects.create(
+        HistoryMessage.objects.create(
             phone_number=self.phone_number,
             user_type=user_type,
             message=json.dumps({"content": message}),
@@ -66,14 +66,14 @@ class MessageHistoryService:
 
         self.messages.append(message)
         if isinstance(message, ToolMessage):
-            History_Message.objects.create(
+            HistoryMessage.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
                 message=json.dumps({"content": message.content}),
                 tool_call_id=message.tool_call_id,
             )
         elif isinstance(message, AIMessage):
-            History_Message.objects.create(
+            HistoryMessage.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
                 message=json.dumps(
@@ -84,7 +84,7 @@ class MessageHistoryService:
                 ),
             )
         else:
-            History_Message.objects.create(
+            HistoryMessage.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
                 message=json.dumps({"content": message.content}),
