@@ -1,0 +1,31 @@
+name: Create Stage Environment
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build and Push to ECR"]
+    types:
+      - completed
+
+
+jobs:
+  build:
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Prepare repo for the workflow
+        uses: actions/checkout@v4
+      - name: Create stage for this PR on remote server
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            REMOTE_HOST: ${{ vars.REMOTE_HOST }}
+        run: |
+            echo "$SSH_PRIVATE_KEY" > key.pem
+            chmod 600 key.pem
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                PR_NUMBER=${{ github.event.pull_request.number }}
+                ssh -i key.pem -o StrictHostKeyChecking=no $REMOTE_HOST "bash run-container.sh pr-${PR_NUMBER}"
+            else
+                ssh -i key.pem -o StrictHostKeyChecking=no $REMOTE_HOST "bash run-container.sh"
+            fi
+            rm key.pem
