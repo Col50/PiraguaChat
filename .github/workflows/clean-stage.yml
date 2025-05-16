@@ -1,0 +1,22 @@
+name: Remove PR Container
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  remove:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Prepare repo for the workflow 
+        uses: actions/checkout@v4
+      - name: Run remove script on remote server via SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ vars.REMOTE_HOST }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > key.pem
+          chmod 600 key.pem
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          ssh -i key.pem -o StrictHostKeyChecking=no $REMOTE_HOST "bash remove-pr-container.sh pr-${PR_NUMBER}"
+          rm key.pem

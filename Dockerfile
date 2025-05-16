@@ -27,4 +27,4 @@ EXPOSE 8000
 
 
 # Run migrations and start the Django development server
-CMD ["/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/bin/sh", "-c", "/app/.venv/bin/python manage.py migrate && /app/.venv/bin/python manage.py runserver 0.0.0.0:8000"]

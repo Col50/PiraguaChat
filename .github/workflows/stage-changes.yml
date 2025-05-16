@@ -1,0 +1,36 @@
+name: Send to Stage
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Prepare repo for the workflow
+        uses: actions/checkout@v4
+      - name: Compile and push to ECR
+        uses: kciter/aws-ecr-action@v5
+        with:
+          access_key_id: ${{ secrets.AwsAccessKey }}
+          secret_access_key: ${{ secrets.AwsSecretKey }}
+          account_id: ${{ secrets.AwsAccountId }}
+          repo: "test-piragua"
+          tags: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || (github.ref_name == 'main' && 'latest') }}
+          region: "us-east-2"
+      - name: Create stage for this PR on remote server
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            REMOTE_HOST: ${{ vars.REMOTE_HOST }}
+        run: |
+            echo "$SSH_PRIVATE_KEY" > key.pem
+            chmod 600 key.pem
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                PR_NUMBER=${{ github.event.pull_request.number }}
+                ssh -i key.pem -o StrictHostKeyChecking=no $REMOTE_HOST "bash run-container.sh pr-${PR_NUMBER}"
+            else
+                ssh -i key.pem -o StrictHostKeyChecking=no $REMOTE_HOST "bash run-container.sh"
+            fi
+            rm key.pem
