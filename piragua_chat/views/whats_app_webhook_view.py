@@ -29,13 +29,11 @@ class WhatsAppWebhookView(APIView):
         logger.info(f"Mensaje de WhatsApp recibido: {phone_number} - {body}")
 
         try:
-            # Guardar el mensaje del usuario en la base de datos
+            #  Recupera el historial almacenado en la base de datos
             message_history = MessageHistoryService(phone_number)
 
             # Llamar directamente a la lógica del agente
             result = process_query(body, message_history)
-
-            # Guardar la respuesta generada por la IA en la base de datos
 
         except Exception as e:
             result = f"Error al procesar la consulta: {str(e)}"

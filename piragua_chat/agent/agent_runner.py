@@ -11,7 +11,7 @@ from piragua_chat.enum.message_type import MessageType
 def process_query(query: str, message_history: MessageHistoryService) -> str:
 
     try:
-        message_history.create_and_add(MessageType.HUMAN.value, query)
+        message_history.create_and_add(MessageType.HUMAN, query)
         for _ in range(3):  # máximo 3 ciclos
             ai_message = llm_with_tools.invoke(message_history.get())
 
@@ -31,7 +31,7 @@ def process_query(query: str, message_history: MessageHistoryService) -> str:
 
                 tool_output = selected_tool.invoke(tool_args)
                 message_history.create_and_add(
-                    MessageType.TOOL.value, str(tool_output), tool_call_id=tool_id
+                    MessageType.TOOL, str(tool_output), tool_call_id=tool_id
                 )
 
         final_message = llm_with_tools.invoke(message_history.get())
@@ -41,5 +41,5 @@ def process_query(query: str, message_history: MessageHistoryService) -> str:
     except Exception as e:
         error_message = "Disculpa, no puedo ayudarte con esta solicutud en este momento, por favor intenta más tarde."
         logger.error(f"Error processing query: {e}")
-        message_history.create_and_add(MessageType.SYSTEM.value, error_message)
+        message_history.create_and_add(MessageType.SYSTEM, error_message)
         return error_message
