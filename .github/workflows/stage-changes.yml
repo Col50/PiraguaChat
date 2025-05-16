@@ -1,25 +1,18 @@
-name: Send to Stage
+name: Create Stage Environment
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
+  workflow_run:
+    workflows: ["Build and Push to ECR"]
+    types:
+      - completed
 
 jobs:
   build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Prepare repo for the workflow
         uses: actions/checkout@v4
-      - name: Compile and push to ECR
-        uses: kciter/aws-ecr-action@v5
-        with:
-          access_key_id: ${{ secrets.AwsAccessKey }}
-          secret_access_key: ${{ secrets.AwsSecretKey }}
-          account_id: ${{ secrets.AwsAccountId }}
-          repo: "test-piragua"
-          tags: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || (github.ref_name == 'main' && 'latest') }}
-          region: "us-east-2"
       - name: Create stage for this PR on remote server
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
