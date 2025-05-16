@@ -2,7 +2,6 @@ name: Create Stage Environment
 
 on:
   workflow_dispatch:
-  push: 
   workflow_run:
     workflows: ["Build and Push to ECR"]
     types:

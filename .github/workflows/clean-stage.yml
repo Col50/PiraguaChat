@@ -3,7 +3,6 @@ name: Remove PR Container
 on:
   pull_request:
     types: [closed]
-  push:
 
 jobs:
   remove:
