@@ -1,6 +1,6 @@
 import json
 from json import tool
-from piragua_chat.models.history_message import History_Message
+from piragua_chat.models.history_message import HistoryMessage
 from langchain_core.messages import (
     HumanMessage,
     ToolMessage,
@@ -26,7 +26,7 @@ class MessageHistoryService:
         self.phone_number = phone_number
 
         time_ago = datetime.now() - timedelta(minutes=15)
-        db_messages = History_Message.objects.filter(
+        db_messages = HistoryMessage.objects.filter(
             phone_number=phone_number,
             date__gte=time_ago,
         ).order_by("date")
@@ -53,18 +53,19 @@ class MessageHistoryService:
             + self.messages
         )
 
-    def create_and_add(self, user_type, message, tool_call_id=None):
-
+    def create_and_add(self, user_type: MessageType, message, tool_call_id=None):
+        if not isinstance(user_type, MessageType):
+            raise ValueError("user_type debe ser una instancia de MessageType")
         # Si es una llamada a la herramienta, se agrega el ID de la herramienta
         self.messages.append(
-            MESSAGE_CLASS_BY_TYPE[user_type](
+            MESSAGE_CLASS_BY_TYPE[user_type.value](
                 content=message,
                 tool_call_id=tool_call_id,
             )
         )
-        History_Message.objects.create(
+        HistoryMessage.objects.create(
             phone_number=self.phone_number,
-            user_type=user_type,
+            user_type=user_type.value,
             message=json.dumps({"content": message}),
             tool_call_id=tool_call_id,
         )
@@ -73,14 +74,14 @@ class MessageHistoryService:
 
         self.messages.append(message)
         if isinstance(message, ToolMessage):
-            History_Message.objects.create(
+            HistoryMessage.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
                 message=json.dumps({"content": message.content}),
                 tool_call_id=message.tool_call_id,
             )
         elif isinstance(message, AIMessage):
-            History_Message.objects.create(
+            HistoryMessage.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
                 message=json.dumps(
@@ -91,7 +92,7 @@ class MessageHistoryService:
                 ),
             )
         else:
-            History_Message.objects.create(
+            HistoryMessage.objects.create(
                 phone_number=self.phone_number,
                 user_type=message.type,
                 message=json.dumps({"content": message.content}),
