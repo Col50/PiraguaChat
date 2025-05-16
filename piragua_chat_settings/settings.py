@@ -44,7 +44,7 @@ print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",
-    "piragua_chat_settings",
+    "piragua_chat",
 ]
 
 MIDDLEWARE = [
