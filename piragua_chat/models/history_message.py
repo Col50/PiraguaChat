@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class History_Message(models.Model):
+class HistoryMessage(models.Model):
     USER_TYPE_CHOICES = [
         ("Human", "Human"),
         ("AI", "AI"),
@@ -11,6 +11,9 @@ class History_Message(models.Model):
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     tool_call_id = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = "history_message"
 
     def __str__(self):
         return f"{self.user_type} - {self.phone_number} - {self.date}"
