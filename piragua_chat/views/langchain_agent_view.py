@@ -3,9 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import HttpResponse
 import logging
-
-# Importa el runner del agente desde tu nueva estructura
-
 from piragua_chat.models.history_message import HistoryMessage
 from datetime import datetime, timedelta
 
