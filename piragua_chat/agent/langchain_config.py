@@ -29,7 +29,7 @@ tool_list = {tool.name: tool for tool in tools}
 llm = ChatOpenAI(
     model="gpt-4",
     api_key=os.getenv("OPENAI_API_KEY"),
-    temperature=0.3,
+    temperature=0.2,
 )
 
 llm_with_tools = llm.bind_tools(tools)
