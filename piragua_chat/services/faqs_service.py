@@ -14,4 +14,4 @@ def get_faq(question: str) -> dict:
         faqs = response.json().get("values", [])
         return {"faqs": faqs}
     except requests.RequestException as e:
-        return f"Error al consultar las preguntas frecuentes: {e}"
+        return f"Error al consultar las preguntas frecuentes"

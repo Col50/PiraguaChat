@@ -19,4 +19,4 @@ def get_document(
         response.raise_for_status()
         return {"resultados": response.json().get("values", [])}
     except requests.RequestException as e:
-        return f"Error al buscar documentos: {e}"
+        return f"Error al buscar documentos"
