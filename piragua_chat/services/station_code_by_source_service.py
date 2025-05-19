@@ -1,17 +1,6 @@
 import os
 import requests
-import unicodedata
-
-
-def normalize_text(text: str) -> str:
-    """
-    Normaliza el texto eliminando tildes y convirtiendo a minúsculas.
-    """
-    if not text:
-        return ""
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
-    return text.lower()
+from piragua_chat.services.normalize_text_service import normalize_text
 
 
 def get_station_code_by_source(source_name: str) -> str:
