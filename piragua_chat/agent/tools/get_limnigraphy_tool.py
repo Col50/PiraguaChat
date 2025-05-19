@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.get_level_service import get_limnigraphy
+from piragua_chat.services.get_limnigraphy_service import get_limnigraphy
 
 get_limnigraphy_tool = StructuredTool.from_function(
     func=get_limnigraphy,
