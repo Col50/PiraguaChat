@@ -3,20 +3,21 @@ import requests
 from piragua_chat.services.normalize_text_service import normalize_text
 
 
-def get_station_code_by_source(source_name: str) -> str:
+def get_station_codes_by_source(source_name: str) -> list:
     """
-    Busca el código de estación por nombre de fuente (río/quebrada).
+    Busca todos los códigos de estación por nombre de fuente (río/quebrada).
     """
     base_url = f'{os.getenv("BASE_API_URL")}/estaciones'
     try:
         response = requests.get(base_url)
         response.raise_for_status()
         estaciones = response.json().get("values", [])
-        for est in estaciones:
-            fuente_normalized = normalize_text(est.get("fuente", ""))
-            source_name_normalized = normalize_text(source_name)
-            if fuente_normalized == source_name_normalized:
-                return est.get("codigo")
-        return None
+        source_name_normalized = normalize_text(source_name)
+        codes = [
+            est.get("codigo")
+            for est in estaciones
+            if normalize_text(est.get("fuente", "")) == source_name_normalized
+        ]
+        return codes
     except requests.RequestException:
-        return None
+        return []
