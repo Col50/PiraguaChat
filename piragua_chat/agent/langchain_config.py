@@ -15,6 +15,11 @@ from piragua_chat.agent.tools.get_limnigraphy_tool import get_limnigraphy_tool
 from piragua_chat.agent.tools.get_territorial_tool import get_territorial_tool
 from piragua_chat.agent.tools.get_weather_station_tool import get_weather_station_tool
 from piragua_chat.agent.tools.get_max_flow_tool import get_max_flow_tool
+from piragua_chat.agent.tools.get_min_flow_tool import get_min_flow_tool
+from piragua_chat.agent.tools.count_thresholds_tool import count_thresholds_tool
+from piragua_chat.agent.tools.max_precipitation_event_tool import (
+    max_precipitation_event_tool,
+)
 
 
 from langchain_openai import ChatOpenAI
@@ -35,6 +40,9 @@ tools = [
     get_territorial_tool,
     get_weather_station_tool,
     get_max_flow_tool,
+    get_min_flow_tool,
+    count_thresholds_tool,
+    max_precipitation_event_tool,
 ]
 
 # tool_list = {tool.name: tool for tool in tools}
