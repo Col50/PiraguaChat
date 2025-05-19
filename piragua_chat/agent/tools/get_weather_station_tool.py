@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.get_weather_station_service import get_weather_station
+from piragua_chat.services.weather_station_service import get_weather_station
 
 get_weather_station_tool = StructuredTool.from_function(
     func=get_weather_station,

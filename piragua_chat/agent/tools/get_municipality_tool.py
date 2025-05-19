@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.get_municipality_service import get_municipality
+from piragua_chat.services.municipality_service import get_municipality
 
 get_municipality_tool = StructuredTool.from_function(
     func=get_municipality,

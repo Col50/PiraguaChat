@@ -37,23 +37,23 @@ tools = [
     get_max_flow_tool,
 ]
 
-tool_list = {tool.name: tool for tool in tools}
-
-llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro-latest",
-    api_key=os.getenv("GENAI_API_KEY"),
-    temperature=0.3,
-)
-
-llm_with_tools = llm.bind_tools(tools)
-
-
 # tool_list = {tool.name: tool for tool in tools}
 
-# llm = ChatOpenAI(
-#     model="gpt-4",
-#     api_key=os.getenv("OPENAI_API_KEY"),
+# llm = ChatGoogleGenerativeAI(
+#     model="gemini-1.5-pro-latest",
+#     api_key=os.getenv("GENAI_API_KEY"),
 #     temperature=0.3,
 # )
 
 # llm_with_tools = llm.bind_tools(tools)
+
+
+tool_list = {tool.name: tool for tool in tools}
+
+llm = ChatOpenAI(
+    model="gpt-4",
+    api_key=os.getenv("OPENAI_API_KEY"),
+    temperature=0.3,
+)
+
+llm_with_tools = llm.bind_tools(tools)

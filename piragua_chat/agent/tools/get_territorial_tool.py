@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.get_territorial_service import get_territorial
+from piragua_chat.services.territorial_service import get_territorial
 
 get_territorial_tool = StructuredTool.from_function(
     func=get_territorial,
