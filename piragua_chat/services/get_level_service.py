@@ -2,10 +2,7 @@ import os
 import requests
 
 
-def get_level(station_id: int) -> dict:
-    """
-    Consulta el endpoint de nivel para una estación y retorna el último registro.
-    """
+def get_limnigraphy(station_id: int) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/nivel'
     try:
         response = requests.get(base_url)

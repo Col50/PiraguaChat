@@ -1,8 +1,8 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.get_level_service import get_level
+from piragua_chat.services.get_level_service import get_limnigraphy
 
-get_level_tool = StructuredTool.from_function(
-    func=get_level,
+get_limnigraphy_tool = StructuredTool.from_function(
+    func=get_limnigraphy,
     name="consultar_nivel_estacion",
     description="""Consulta el registro de nivel y caudal de una estación automática limnigráfica.
         Requiere el parámetro station_id correspondiente al ID de la estación.

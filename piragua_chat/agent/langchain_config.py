@@ -11,7 +11,9 @@ from piragua_chat.agent.tools.get_hydrobiological_report_tool import (
 )
 from piragua_chat.agent.tools.get_todays_date_tool import get_todays_date_tool
 from piragua_chat.agent.tools.get_faq_tool import get_faq_tool
-from piragua_chat.agent.tools.get_level_tool import get_level_tool
+from piragua_chat.agent.tools.get_level_tool import get_limnigraphy_tool
+from piragua_chat.agent.tools.get_territorial_tool import get_territorial_tool
+
 
 from langchain_openai import ChatOpenAI
 
@@ -27,7 +29,8 @@ tools = [
     get_todays_date_tool,
     get_faq_tool,
     get_municipality_tool,
-    get_level_tool,
+    get_limnigraphy_tool,
+    get_territorial_tool,
 ]
 
 tool_list = {tool.name: tool for tool in tools}
