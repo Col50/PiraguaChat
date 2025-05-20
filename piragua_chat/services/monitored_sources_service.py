@@ -54,3 +54,42 @@ def get_monitored_sources_by_municipality(municipality_name: str) -> dict:
         return {"municipio": municipality_name, "fuentes_monitoreadas": fuentes}
     except Exception as e:
         return {"error": f"Error al consultar la base de datos: {str(e)}"}
+
+
+def get_monitoring_points_location_by_municipality(municipality_name: str) -> dict:
+    """
+    Devuelve la ubicación (altitud, longitud, latitud) de los puntos de monitoreo en el municipio dado.
+    """
+    municipality_name = normalize_text(municipality_name)
+    print(f"municipality_name: {municipality_name}")
+
+    try:
+        with psycopg2.connect(**DB_CONFIG) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT nombre, altitud, longitud, latitud FROM fuentes_hidricas 
+                    WHERE translate(lower(nombre), 'áéíóúÁÉÍÓÚñÑ', 'aeiouaeiounn') = %s
+                    """,
+                    (municipality_name,),
+                )
+                resultados = cur.fetchall()
+                print("Resultados obtenidos de la base de datos:")
+                for r in resultados:
+                    print(r)
+
+                puntos = [
+                    {
+                        "nombre": r[0],
+                        "altitud": r[1],
+                        "longitud": r[2],
+                        "latitud": r[3],
+                    }
+                    for r in resultados
+                ]
+
+        if not puntos:
+            return {"error": "No se encontraron puntos de monitoreo para el municipio."}
+        return {"municipio": municipality_name, "puntos_monitoreo": puntos}
+    except Exception as e:
+        return {"error": f"Error al consultar la base de datos: {str(e)}"}
