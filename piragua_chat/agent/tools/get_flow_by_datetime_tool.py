@@ -3,7 +3,7 @@ from langchain.tools import StructuredTool
 from piragua_chat.services.stream_gage_service import get_flow_by_datetime
 
 
-flow_by_datetime_tool = StructuredTool.from_function(
+get_flow_by_datetime_tool = StructuredTool.from_function(
     func=get_flow_by_datetime,
     name="consultar_caudal_por_fecha_hora",
     description="""Consulta el caudal registrado en una estación en una fecha y hora específica.
