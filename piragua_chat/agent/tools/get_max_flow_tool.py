@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.max_flow_service import get_max_flow_by_source
+from piragua_chat.services.flow_service import get_max_flow_by_source
 
 get_max_flow_tool = StructuredTool.from_function(
     func=get_max_flow_by_source,
