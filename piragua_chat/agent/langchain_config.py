@@ -20,6 +20,8 @@ from piragua_chat.agent.tools.count_thresholds_tool import count_thresholds_tool
 from piragua_chat.agent.tools.max_precipitation_event_tool import (
     max_precipitation_event_tool,
 )
+from piragua_chat.agent.tools.rain_by_datetime_tool import rain_by_datetime_tool
+from piragua_chat.agent.tools.flow_by_datetime_tool import flow_by_datetime_tool
 
 
 from langchain_openai import ChatOpenAI
@@ -36,13 +38,15 @@ tools = [
     get_todays_date_tool,
     get_faq_tool,
     get_municipality_tool,
-    get_limnigraphy_tool,
     get_territorial_tool,
-    get_weather_station_tool,
+    get_limnigraphy_tool,
     get_max_flow_tool,
     get_min_flow_tool,
+    get_weather_station_tool,
     count_thresholds_tool,
     max_precipitation_event_tool,
+    rain_by_datetime_tool,
+    flow_by_datetime_tool,
 ]
 
 # tool_list = {tool.name: tool for tool in tools}

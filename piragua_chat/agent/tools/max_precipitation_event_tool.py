@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.max_precipitation_event_service import (
+from piragua_chat.services.meteorological_station_service import (
     get_max_precipitation_event_by_municipality,
 )
 

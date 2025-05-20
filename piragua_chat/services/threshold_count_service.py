@@ -29,7 +29,8 @@ def count_thresholds_by_municipality(municipality_name: str, threshold: str) -> 
         return {"error": "El municipio no tiene un ID válido."}
 
     # 2. Buscar estaciones del municipio usando el nuevo servicio
-    codigos = get_station_codes_by_municipality(municipio_id)
+    codigos = get_station_codes_by_municipality(municipio_id, "1")
+    print(f"codigos: {codigos}")
     if not codigos:
         return {"error": "No se encontraron estaciones para el municipio."}
 
