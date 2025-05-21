@@ -30,11 +30,11 @@ def get_station_code_by_water_monitoring_name(source_name: str) -> list:
     try:
         response = requests.get(base_url)
         response.raise_for_status()
-        estaciones = response.json().get("values", [])
+        stations = response.json().get("values", [])
         source_name_normalized = normalize_text(source_name)
         codes = [
             est.get("codigo")
-            for est in estaciones
+            for est in stations
             if normalize_text(est.get("fuente", "")) == source_name_normalized
         ]
         return codes
