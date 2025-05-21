@@ -30,12 +30,10 @@ def count_thresholds_by_municipality(municipality_name: str, threshold: str) -> 
 
     # 2. Buscar estaciones del municipio usando el nuevo servicio
     codes = get_station_codes_by_municipality(municipality_id, "1")
-    print(f"codigos: {codes}")
     if not codes:
         return {"error": "No se encontraron estaciones para el municipio."}
 
     # 3. Contar umbrales para cada estación
-    print(f"------Consultando eventos de precipitación para las estaciones: {codes}")
     total = 0
     thresholds_url = f'{os.getenv("BASE_API_URL")}/umbrales'
     for code in codes:

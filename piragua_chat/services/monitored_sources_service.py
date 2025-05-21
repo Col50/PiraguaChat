@@ -13,7 +13,7 @@ DB_CONFIG = {
 }
 
 
-def get_municipio_id_by_name(municipality_name: str):
+def get_municipality_id_by_name(municipality_name: str):
     """
     Devuelve el id del municipio dado su nombre normalizado.
     Retorna None si no se encuentra.
@@ -42,8 +42,8 @@ def get_monitored_sources(municipality_name: str) -> dict:
     """
     Devuelve la lista de fuentes (quebradas/ríos) monitoreadas en el municipio dado.
     """
-    municipio_id = get_municipio_id_by_name(municipality_name)
-    if not municipio_id:
+    municipality_id = get_municipality_id_by_name(municipality_name)
+    if not municipality_id:
         return {"error": f"No se encontró el municipio '{municipality_name}'."}
     try:
         conn = psycopg2.connect(**DB_CONFIG)
@@ -53,7 +53,7 @@ def get_monitored_sources(municipality_name: str) -> dict:
             SELECT nombre FROM fuentes_hidricas
             WHERE municipio_id = %s
             """,
-            (municipio_id,),
+            (municipality_id,),
         )
         fuentes = [r[0] for r in cur.fetchall()]
         cur.close()
@@ -111,9 +111,9 @@ def get_count_monitored_sources(municipality_name: str) -> dict:
     """
     Devuelve la cantidad de fuentes (quebradas/ríos) monitoreadas en el municipio dado.
     """
-    municipio_id = get_municipio_id_by_name(municipality_name)
-    print(f"municipio_id: {municipio_id}")
-    if not municipio_id:
+    municipality_id = get_municipality_id_by_name(municipality_name)
+    print(f"municipio_id: {municipality_id}")
+    if not municipality_id:
         return {"error": f"No se encontró el municipio '{municipality_name}'."}
     try:
         conn = psycopg2.connect(**DB_CONFIG)
@@ -123,7 +123,7 @@ def get_count_monitored_sources(municipality_name: str) -> dict:
             SELECT COUNT(*) FROM fuentes_hidricas
             WHERE municipio_id = %s
             """,
-            (municipio_id,),
+            (municipality_id,),
         )
         count = cur.fetchone()[0]
         cur.close()

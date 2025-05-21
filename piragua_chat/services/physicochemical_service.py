@@ -43,9 +43,9 @@ def get_station_code_by_water_monitoring_name(source_name: str) -> list:
 
 
 def get_water_quality(source_name: str) -> dict:
-    codigos = get_station_code_by_water_monitoring_name(source_name)
-    print(f"Codigos encontrados: {codigos}")
-    return {"codigos": codigos}
+    codes = get_station_code_by_water_monitoring_name(source_name)
+    print(f"Codigos encontrados: {codes}")
+    return {"codigos": codes}
 
 
 def get_last_water_quality_measurement(source_name: str) -> dict:
@@ -63,7 +63,9 @@ def get_last_water_quality_measurement(source_name: str) -> dict:
     latest_station = None
 
     for station_code in stations_code:
-        base_url = f'{os.getenv("BASE_API_URL")}/fisicoquimicos/{station_code}/resultados'
+        base_url = (
+            f'{os.getenv("BASE_API_URL")}/fisicoquimicos/{station_code}/resultados'
+        )
         print(f"base_url ----- {base_url}")
         try:
             response = requests.get(base_url)
@@ -72,7 +74,9 @@ def get_last_water_quality_measurement(source_name: str) -> dict:
             if not items:
                 continue
             station_latest = max(items, key=lambda x: x.get("fecha", ""))
-            if (latest is None) or (station_latest.get("fecha", "") > latest.get("fecha", "")):
+            if (latest is None) or (
+                station_latest.get("fecha", "") > latest.get("fecha", "")
+            ):
                 latest = station_latest
                 latest_station = station_code
         except requests.RequestException:

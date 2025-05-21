@@ -55,51 +55,51 @@ def get_max_precipitation_event_by_municipality(municipality_name: str) -> dict:
     Busca el evento de precipitación más fuerte registrado en cualquier estación meteorológica del municipio.
     """
     # 1. Buscar municipio por nombre (normalizando)
-    municipios = get_municipality().get("municipality", [])
+    municipalitys = get_municipality().get("municipality", [])
     municipality_name_normalized = normalize_text(municipality_name)
-    municipio = next(
+    municipality = next(
         (
             m
-            for m in municipios
+            for m in municipalitys
             if normalize_text(m.get("nombre", "")) == municipality_name_normalized
         ),
         None,
     )
-    if not municipio:
+    if not municipality:
         return {"error": f"No se encontró el municipio'{municipality_name}'."}
-    municipio_id = municipio.get("id")
-    if not municipio_id:
+    municipality_id = municipality.get("id")
+    if not municipality_id:
         return {"error": "El municipio no tiene un ID válido."}
 
     # 2. Buscar estaciones meteorológicas del municipio usando el nuevo servicio
-    codigos = get_station_codes_by_municipality(municipio_id, "8")
-    if not codigos:
+    codes = get_station_codes_by_municipality(municipality_id, "8")
+    if not codes:
         return {
             "error": "No se encontraron estaciones meteorológicas para el municipio."
         }
 
     # 3. Buscar el evento de precipitación máxima en todas las estaciones
-    max_precip = float("-inf")
+    max_precipitation = float("-inf")
     max_event = None
-    codigo_max = None
+    code_max = None
 
     # Llama una sola vez con todos los códigos
-    all_records = get_all_meteorological_station_records(codigos)
-    for codigo, registros in all_records.items():
-        for reg in registros:
+    all_records = get_all_meteorological_station_records(codes)
+    for code, registers in all_records.items():
+        for register in registers:
             try:
-                precip = float(reg.get("lluvia", "-999.0"))
+                precipitation = float(register.get("lluvia", "-999.0"))
             except (TypeError, ValueError):
                 continue
-            if precip > max_precip:
-                max_precip = precip
-                max_event = reg
-                codigo_max = codigo
+            if precipitation > max_precipitation:
+                max_precipitation = precipitation
+                max_event = register
+                code_max = code
 
     if max_event:
         return {
-            "municipio": municipio.get("nombre"),
-            "codigo_estacion": codigo_max,
+            "municipio": municipality.get("nombre"),
+            "codigo_estacion": code_max,
             "fecha": max_event.get("fecha"),
             "precipitacion_maxima": max_event.get("lluvia"),
         }
@@ -109,7 +109,7 @@ def get_max_precipitation_event_by_municipality(municipality_name: str) -> dict:
         }
 
 
-def get_rain_by_datetime(station_id: int, fecha: str, hora: str) -> dict:
+def get_rain_by_datetime(station_id: int, date: str, hora: str) -> dict:
     """
     Consulta el nivel de lluvia registrado en una estación meteorológica en una fecha y hora específica.
     Parámetros:
@@ -118,25 +118,25 @@ def get_rain_by_datetime(station_id: int, fecha: str, hora: str) -> dict:
         hora: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
     """
     # Calcular fecha siguiente para fecha__lt
-    fecha_dt = datetime.strptime(fecha, "%Y-%m-%d")
-    fecha_siguiente = (fecha_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+    date_dt = datetime.strptime(date, "%Y-%m-%d")
+    next_date = (date_dt + timedelta(days=1)).strftime("%Y-%m-%d")
     base_url = (
         f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/meteorologia/horario/'
     )
-    params = {"fecha__gte": fecha, "fecha__lt": fecha_siguiente}
+    params = {"fecha__gte": date, "fecha__lt": next_date}
     try:
         response = requests.get(base_url, params=params)
         response.raise_for_status()
         values = response.json().get("values", [])
         # Construir el string de fecha completa en formato ISO
-        fecha_hora = f"{fecha}T{hora.zfill(2)}:00:00Z"
+        date_time = f"{date}T{hora.zfill(2)}:00:00Z"
         for reg in values:
-            if reg.get("fecha") == fecha_hora:
+            if reg.get("fecha") == date_time:
                 return {
                     "fecha": reg.get("fecha"),
                     "lluvia": reg.get("lluvia"),
                     "id": reg.get("id"),
                 }
-        return {"error": f"No se encontró registro para la fecha y hora {fecha_hora}."}
+        return {"error": f"No se encontró registro para la fecha y hora {date_time}."}
     except requests.RequestException:
         return {"error": "Error al consultar los datos de la estación."}
