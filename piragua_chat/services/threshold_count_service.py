@@ -12,45 +12,45 @@ def count_thresholds_by_municipality(municipality_name: str, threshold: str) -> 
     Cuenta los umbrales (ROJO, NARANJA, AMARILLO) reportados en todos los puntos de monitoreo de un municipio.
     """
     # 1. Buscar municipio por nombre (normalizando)
-    municipios = get_municipality().get("municipality", [])
+    municipalitys = get_municipality().get("municipality", [])
     municipality_name_normalized = normalize_text(municipality_name)
-    municipio = next(
+    municipality = next(
         (
             m
-            for m in municipios
+            for m in municipalitys
             if normalize_text(m.get("nombre", "")) == municipality_name_normalized
         ),
         None,
     )
-    if not municipio:
+    if not municipality:
         return {"error": f"No se encontró el municipio '{municipality_name}'."}
-    municipio_id = municipio.get("id")
-    if not municipio_id:
+    municipality_id = municipality.get("id")
+    if not municipality_id:
         return {"error": "El municipio no tiene un ID válido."}
 
     # 2. Buscar estaciones del municipio usando el nuevo servicio
-    codigos = get_station_codes_by_municipality(municipio_id, "1")
-    print(f"codigos: {codigos}")
-    if not codigos:
+    codes = get_station_codes_by_municipality(municipality_id, "1")
+    print(f"codigos: {codes}")
+    if not codes:
         return {"error": "No se encontraron estaciones para el municipio."}
 
     # 3. Contar umbrales para cada estación
-    print(f"------Consultando eventos de precipitación para las estaciones: {codigos}")
+    print(f"------Consultando eventos de precipitación para las estaciones: {codes}")
     total = 0
-    umbrales_url = f'{os.getenv("BASE_API_URL")}/umbrales'
-    for codigo in codigos:
+    thresholds_url = f'{os.getenv("BASE_API_URL")}/umbrales'
+    for code in codes:
         try:
             resp = requests.get(
-                umbrales_url, params={"estacion": codigo, "umbral": threshold.upper()}
+                thresholds_url, params={"estacion": code, "umbral": threshold.upper()}
             )
             resp.raise_for_status()
-            umbrales = resp.json().get("values", [])
-            total += len(umbrales)
+            thresholds = resp.json().get("values", [])
+            total += len(thresholds)
         except requests.RequestException:
             continue
 
     return {
-        "municipio": municipio.get("nombre"),
+        "municipio": municipality.get("nombre"),
         "umbral": threshold.upper(),
         "total": total,
     }
