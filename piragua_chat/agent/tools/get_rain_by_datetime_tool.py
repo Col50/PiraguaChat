@@ -2,7 +2,7 @@ from langchain.tools import StructuredTool
 from piragua_chat.services.meteorological_station_service import get_rain_by_datetime
 
 
-rain_by_datetime_tool = StructuredTool.from_function(
+get_rain_by_datetime_tool = StructuredTool.from_function(
     func=get_rain_by_datetime,
     name="consultar_lluvia_por_fecha_hora",
     description="""Consulta el nivel de lluvia registrado en una estación meteorológica en una fecha y hora específica.

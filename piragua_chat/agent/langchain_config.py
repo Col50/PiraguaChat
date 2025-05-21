@@ -16,19 +16,27 @@ from piragua_chat.agent.tools.get_territorial_tool import get_territorial_tool
 from piragua_chat.agent.tools.get_weather_station_tool import get_weather_station_tool
 from piragua_chat.agent.tools.get_max_flow_tool import get_max_flow_tool
 from piragua_chat.agent.tools.get_min_flow_tool import get_min_flow_tool
-from piragua_chat.agent.tools.count_thresholds_tool import count_thresholds_tool
+from piragua_chat.agent.tools.get_count_thresholds_tool import get_count_thresholds_tool
 from piragua_chat.agent.tools.get_max_precipitation_event_tool import (
-    max_precipitation_event_tool,
+    get_max_precipitation_event_tool,
 )
 
-from piragua_chat.agent.tools.rain_by_datetime_tool import rain_by_datetime_tool
+from piragua_chat.agent.tools.get_rain_by_datetime_tool import get_rain_by_datetime_tool
 from piragua_chat.agent.tools.get_flow_by_datetime_tool import get_flow_by_datetime_tool
 from piragua_chat.agent.tools.get_water_quality import get_water_quality_tool
-from piragua_chat.agent.tools.last_water_quality_tool import last_water_quality_tool
-from piragua_chat.agent.tools.monitored_sources_tool import monitored_sources_tool
-from piragua_chat.agent.tools.monitoring_points_location_tool import (
-    monitoring_points_location_tool,
+from piragua_chat.agent.tools.get_last_water_quality_tool import (
+    get_last_water_quality_tool,
 )
+from piragua_chat.agent.tools.get_monitored_sources_tool import (
+    get_monitored_sources_tool,
+)
+from piragua_chat.agent.tools.get_monitoring_points_location_tool import (
+    get_monitoring_points_location_tool,
+)
+from piragua_chat.agent.tools.get_count_monitored_sources_tool import (
+    get_count_monitored_sources_tool,
+)
+
 
 from langchain_openai import ChatOpenAI
 
@@ -49,14 +57,15 @@ tools = [
     get_max_flow_tool,
     get_min_flow_tool,
     get_weather_station_tool,
-    count_thresholds_tool,
-    max_precipitation_event_tool,
-    rain_by_datetime_tool,
+    get_count_thresholds_tool,
+    get_max_precipitation_event_tool,
+    get_rain_by_datetime_tool,
     get_flow_by_datetime_tool,
     get_water_quality_tool,
-    last_water_quality_tool,
-    monitored_sources_tool,
-    monitoring_points_location_tool,
+    get_last_water_quality_tool,
+    get_monitored_sources_tool,
+    get_monitoring_points_location_tool,
+    get_count_monitored_sources_tool,
 ]
 
 # tool_list = {tool.name: tool for tool in tools}
