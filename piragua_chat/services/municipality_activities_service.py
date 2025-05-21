@@ -22,24 +22,24 @@ def get_activities_by_municipality(municipality_name: str) -> dict:
     if not municipality_id:
         return {"error": f"No se encontró el municipio '{municipality_name}'."}
     try:
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
+        with psycopg2.connect(**DB_CONFIG) as connection:
+            with connection.cursor() as cursor:
                 # Buscar los grupos piragueros del municipio
-                cur.execute(
+                cursor.execute(
                     """
                     SELECT id FROM grupos_piragueros
                     WHERE municipio_id = %s
                     """,
                     (municipality_id,),
                 )
-                groups = [r[0] for r in cur.fetchall()]
+                groups = [row[0] for row in cursor.fetchall()]
                 if not groups:
                     return {
                         "error": "No se encontraron grupos piragueros para el municipio."
                     }
 
                 # Buscar asistencias para esos grupos
-                cur.execute(
+                cursor.execute(
                     """
                     SELECT grupo_piraguero_id, fecha_asistencia, nombre_id
                     FROM "Asistencias"
@@ -47,7 +47,7 @@ def get_activities_by_municipality(municipality_name: str) -> dict:
                     """,
                     (groups,),
                 )
-                assists = cur.fetchall()
+                assists = cursor.fetchall()
                 if not assists:
                     return {
                         "error": "No se encontraron actividades registradas para los grupos piragueros del municipio."
@@ -57,14 +57,14 @@ def get_activities_by_municipality(municipality_name: str) -> dict:
                 name_ids = list(set([a[2] for a in assists if a[2] is not None]))
                 names_activities = {}
                 if name_ids:
-                    cur.execute(
+                    cursor.execute(
                         """
                         SELECT id, nombre FROM nombres_asistencias
                         WHERE id = ANY(%s)
                         """,
                         (name_ids,),
                     )
-                    names_activities = {r[0]: r[1] for r in cur.fetchall()}
+                    names_activities = {r[0]: r[1] for r in cursor.fetchall()}
 
                 activities = [
                     {
@@ -80,5 +80,5 @@ def get_activities_by_municipality(municipality_name: str) -> dict:
             "municipio": municipality_name,
             "actividades": activities,
         }
-    except Exception as e:
+    except Exception:
         return {"error": f"Error al consultar la base de datos"}

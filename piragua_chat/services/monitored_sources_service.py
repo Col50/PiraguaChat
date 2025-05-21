@@ -20,9 +20,9 @@ def get_municipality_id_by_name(municipality_name: str):
     """
     municipality_name = normalize_text(municipality_name)
     try:
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute(
+        with psycopg2.connect(**DB_CONFIG) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
                     """
                     SELECT id FROM municipios
                     WHERE translate(lower(nombre), 'áéíóúÁÉÍÓÚñÑ', 'aeiouaeiounn') = %s
@@ -30,7 +30,7 @@ def get_municipality_id_by_name(municipality_name: str):
                     """,
                     (municipality_name,),
                 )
-                row = cur.fetchone()
+                row = cursor.fetchone()
                 if row:
                     return row[0]
     except Exception as e:
@@ -46,18 +46,18 @@ def get_monitored_sources(municipality_name: str) -> dict:
     if not municipality_id:
         return {"error": f"No se encontró el municipio '{municipality_name}'."}
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        cur = conn.cursor()
-        cur.execute(
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute(
             """
             SELECT nombre FROM fuentes_hidricas
             WHERE municipio_id = %s
             """,
             (municipality_id,),
         )
-        sources = [r[0] for r in cur.fetchall()]
-        cur.close()
-        conn.close()
+        sources = [r[0] for r in cursor.fetchall()]
+        cursor.close()
+        connection.close()
         if not sources:
             return {
                 "error": "No se encontraron fuentes monitoreadas para el municipio."
@@ -76,16 +76,16 @@ def get_monitoring_points_location(municipality_name: str) -> dict:
     print(f"ENTRA A get_monitoring_points_location")
 
     try:
-        with psycopg2.connect(**DB_CONFIG) as conn:
-            with conn.cursor() as cur:
-                cur.execute(
+        with psycopg2.connect(**DB_CONFIG) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
                     """
                     SELECT nombre, altitud, longitud, latitud FROM fuentes_hidricas 
                     WHERE translate(lower(nombre), 'áéíóúÁÉÍÓÚñÑ', 'aeiouaeiounn') = %s
                     """,
                     (municipality_name,),
                 )
-                resultados = cur.fetchall()
+                resultados = cursor.fetchall()
                 print("Resultados obtenidos de la base de datos:")
                 for r in resultados:
                     print(r)
@@ -116,23 +116,22 @@ def get_count_monitored_sources(municipality_name: str) -> dict:
     if not municipality_id:
         return {"error": f"No se encontró el municipio '{municipality_name}'."}
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        cur = conn.cursor()
-        cur.execute(
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute(
             """
             SELECT COUNT(*) FROM fuentes_hidricas
             WHERE municipio_id = %s
             """,
             (municipality_id,),
         )
-        count = cur.fetchone()[0]
-        cur.close()
-        conn.close()
+        count = cursor.fetchone()[0]
+        cursor.close()
+        connection.close()
         if not count:
             return {
                 "error": "No se encontraron fuentes monitoreadas para el municipio."
             }
-        print(f"count------:{count}")
         return {"municipio": municipality_name, "cantidad_fuentes_monitoreadas": count}
     except Exception as e:
         return {"error": f"Error al consultar la base de datos"}

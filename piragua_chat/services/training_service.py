@@ -17,16 +17,16 @@ def get_training_name() -> dict:
     Devuelve la cantidad de fuentes (quebradas/ríos) monitoreadas en el municipio dado.
     """
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        cur = conn.cursor()
-        cur.execute(
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute(
             """
             SELECT nombre FROM nombres_asistencias
             """
         )
-        trainings_name = [r[0] for r in cur.fetchall()]
-        cur.close()
-        conn.close()
+        trainings_name = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        connection.close()
         if not trainings_name:
             return {"error": "No se pueden obtener la lista de formaciones."}
         return {
