@@ -34,7 +34,7 @@ def get_municipality_id_by_name(municipality_name: str):
                 if row:
                     return row[0]
     except Exception as e:
-        print(f"Error al obtener municipio_id: {e}")
+        print(f"Error al obtener el id del municipio")
     return None
 
 
@@ -55,17 +55,17 @@ def get_monitored_sources(municipality_name: str) -> dict:
             """,
             (municipality_id,),
         )
-        fuentes = [r[0] for r in cur.fetchall()]
+        sources = [r[0] for r in cur.fetchall()]
         cur.close()
         conn.close()
-        if not fuentes:
+        if not sources:
             return {
                 "error": "No se encontraron fuentes monitoreadas para el municipio."
             }
-        print(f"fuentes------:{fuentes}")
-        return {"municipio": municipality_name, "fuentes_monitoreadas": fuentes}
+        print(f"fuentes------:{sources}")
+        return {"municipio": municipality_name, "fuentes_monitoreadas": sources}
     except Exception as e:
-        return {"error": f"Error al consultar la base de datos: {str(e)}"}
+        return {"error": f"Error al consultar la base de datos"}
 
 
 def get_monitoring_points_location(municipality_name: str) -> dict:
@@ -104,7 +104,7 @@ def get_monitoring_points_location(municipality_name: str) -> dict:
             return {"error": "No se encontraron puntos de monitoreo para el municipio."}
         return {"municipio": municipality_name, "puntos_monitoreo": puntos}
     except Exception as e:
-        return {"error": f"Error al consultar la base de datos: {str(e)}"}
+        return {"error": f"Error al consultar la base de datos"}
 
 
 def get_count_monitored_sources(municipality_name: str) -> dict:
@@ -135,4 +135,4 @@ def get_count_monitored_sources(municipality_name: str) -> dict:
         print(f"count------:{count}")
         return {"municipio": municipality_name, "cantidad_fuentes_monitoreadas": count}
     except Exception as e:
-        return {"error": f"Error al consultar la base de datos: {str(e)}"}
+        return {"error": f"Error al consultar la base de datos"}

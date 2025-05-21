@@ -36,6 +36,10 @@ from piragua_chat.agent.tools.get_monitoring_points_location_tool import (
 from piragua_chat.agent.tools.get_count_monitored_sources_tool import (
     get_count_monitored_sources_tool,
 )
+from piragua_chat.agent.tools.get_training_name_service_tool import (
+    get_training_name_tool,
+)
+
 from piragua_chat.agent.tools.get_station_count_by_type_tool import (
     get_station_count_by_type_tool,
 )
@@ -68,7 +72,8 @@ tools = [
     get_monitored_sources_tool,
     get_monitoring_points_location_tool,
     get_count_monitored_sources_tool,
-    get_station_count_by_type_tool,  # <-- agregar aquí
+    get_station_count_by_type_tool,
+    get_training_name_tool,
 ]
 
 # tool_list = {tool.name: tool for tool in tools}
