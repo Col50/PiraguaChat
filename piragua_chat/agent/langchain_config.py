@@ -44,6 +44,10 @@ from piragua_chat.agent.tools.get_station_count_by_type_tool import (
     get_station_count_by_type_tool,
 )
 
+from piragua_chat.agent.tools.get_activities_by_municipality_tool import (
+    get_activities_by_municipality_tool,
+)
+
 from langchain_openai import ChatOpenAI
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -74,6 +78,7 @@ tools = [
     get_count_monitored_sources_tool,
     get_station_count_by_type_tool,
     get_training_name_tool,
+    get_activities_by_municipality_tool,
 ]
 
 # tool_list = {tool.name: tool for tool in tools}
