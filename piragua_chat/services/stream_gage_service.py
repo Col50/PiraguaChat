@@ -118,7 +118,7 @@ def get_min_flow_by_source(source_name: str) -> dict:
         return {"error": "No se encontraron registros de caudal para las estaciones."}
 
 
-def get_flow_by_datetime(station_id: int, date: str, hora: str) -> dict:
+def get_flow_by_datetime(station_id: int, date_string: str, hora: str) -> dict:
     """
     Consulta el caudal registrado en una estación en una fecha y hora específica.
     Parámetros:
@@ -126,15 +126,15 @@ def get_flow_by_datetime(station_id: int, date: str, hora: str) -> dict:
         fecha: string en formato 'YYYY-MM-DD'
         hora: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
     """
-    date_dt = datetime.strptime(date, "%Y-%m-%d")
-    next_date = (date_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+    date = datetime.strptime(date_string, "%Y-%m-%d")
+    next_date = (date + timedelta(days=1)).strftime("%Y-%m-%d")
     base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/nivel/horario/'
-    params = {"fecha__gte": date, "fecha__lt": next_date}
+    params = {"fecha__gte": date_string, "fecha__lt": next_date}
     try:
         response = requests.get(base_url, params=params)
         response.raise_for_status()
         values = response.json().get("values", [])
-        date_time = f"{date}T{hora.zfill(2)}:00:00Z"
+        date_time = f"{date_string}T{hora.zfill(2)}:00:00Z"
         for reg in values:
             if reg.get("fecha") == date_time:
                 return {

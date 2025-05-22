@@ -62,7 +62,6 @@ def get_monitored_sources(municipality_name: str) -> dict:
             return {
                 "error": "No se encontraron fuentes monitoreadas para el municipio."
             }
-        print(f"fuentes------:{sources}")
         return {"municipio": municipality_name, "fuentes_monitoreadas": sources}
     except Exception as e:
         return {"error": f"Error al consultar la base de datos"}

@@ -1,5 +1,3 @@
-import os
-import requests
 from piragua_chat.services.normalize_text_service import normalize_text
 from piragua_chat.services.station_by_municipality_service import (
     get_station_codes_by_municipality,
@@ -8,10 +6,10 @@ from piragua_chat.services.municipality_service import get_municipality
 
 
 TIPO_MAP = {
-    "pluviogra": "1",
-    "limnigra": "2",
-    "meteorolog": "8",
-    "piezomet": "6",
+    "pluviografica": "1",
+    "limnigrafica": "2",
+    "meteorologica": "8",
+    "piezometro": "6",
 }
 
 

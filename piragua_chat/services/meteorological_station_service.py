@@ -109,7 +109,7 @@ def get_max_precipitation_event_by_municipality(municipality_name: str) -> dict:
         }
 
 
-def get_rain_by_datetime(station_id: int, date: str, hora: str) -> dict:
+def get_rain_by_datetime(station_id: int, date_string: str, hora: str) -> dict:
     """
     Consulta el nivel de lluvia registrado en una estación meteorológica en una fecha y hora específica.
     Parámetros:
@@ -118,18 +118,18 @@ def get_rain_by_datetime(station_id: int, date: str, hora: str) -> dict:
         hora: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
     """
     # Calcular fecha siguiente para fecha__lt
-    date_dt = datetime.strptime(date, "%Y-%m-%d")
-    next_date = (date_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+    date = datetime.strptime(date_string, "%Y-%m-%d")
+    next_date = (date + timedelta(days=1)).strftime("%Y-%m-%d")
     base_url = (
         f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/meteorologia/horario/'
     )
-    params = {"fecha__gte": date, "fecha__lt": next_date}
+    params = {"fecha__gte": date_string, "fecha__lt": next_date}
     try:
         response = requests.get(base_url, params=params)
         response.raise_for_status()
         values = response.json().get("values", [])
         # Construir el string de fecha completa en formato ISO
-        date_time = f"{date}T{hora.zfill(2)}:00:00Z"
+        date_time = f"{date_string}T{hora.zfill(2)}:00:00Z"
         for reg in values:
             if reg.get("fecha") == date_time:
                 return {
