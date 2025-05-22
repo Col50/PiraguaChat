@@ -25,9 +25,9 @@ def get_station_codes_by_source(source_name: str) -> list:
 
 
 def get_stream_gage(station_id: int) -> dict:
-    # codigos = get_station_codes_by_source(source_name)
-    # if not codigos:
-    #     return {"error": f"No se encontró estación para la fuente '{source_name}'."}
+    """
+    Consulta el caudal y nivel de una estación de monitoreo.
+    """
 
     base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/nivel'
     try:
@@ -49,6 +49,9 @@ def get_stream_gage(station_id: int) -> dict:
 
 
 def get_max_flow_by_source(source_name: str) -> dict:
+    """
+    Busca el evento de caudal máximo registrado en cualquier estación de monitoreo de la fuente dada.
+    """
     codes = get_station_codes_by_source(source_name)
     if not codes:
         return {"error": f"No se encontró estación para la fuente '{source_name}'."}
@@ -84,6 +87,9 @@ def get_max_flow_by_source(source_name: str) -> dict:
 
 
 def get_min_flow_by_source(source_name: str) -> dict:
+    """
+    Busca el evento de caudal mínimo registrado en cualquier estación de monitoreo de la fuente dada.
+    """
     codes = get_station_codes_by_source(source_name)
     if not codes:
         return {"error": f"No se encontró estación para la fuente '{source_name}'."}
@@ -118,13 +124,13 @@ def get_min_flow_by_source(source_name: str) -> dict:
         return {"error": "No se encontraron registros de caudal para las estaciones."}
 
 
-def get_flow_by_datetime(station_id: int, date_string: str, hora: str) -> dict:
+def get_flow_by_datetime(station_id: int, date_string: str, time: str) -> dict:
     """
     Consulta el caudal registrado en una estación en una fecha y hora específica.
     Parámetros:
         station_id: código de la estación
-        fecha: string en formato 'YYYY-MM-DD'
-        hora: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
+        date_string: string en formato 'YYYY-MM-DD'
+        time: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
     """
     date = datetime.strptime(date_string, "%Y-%m-%d")
     next_date = (date + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -134,7 +140,7 @@ def get_flow_by_datetime(station_id: int, date_string: str, hora: str) -> dict:
         response = requests.get(base_url, params=params)
         response.raise_for_status()
         values = response.json().get("values", [])
-        date_time = f"{date_string}T{hora.zfill(2)}:00:00Z"
+        date_time = f"{date_string}T{time.zfill(2)}:00:00Z"
         for reg in values:
             if reg.get("fecha") == date_time:
                 return {

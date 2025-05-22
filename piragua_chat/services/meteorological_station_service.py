@@ -9,6 +9,9 @@ from datetime import datetime, timedelta
 
 
 def get_meteorological_station(station_id: int) -> dict:
+    """
+    Retorna el último registro de lluvia de una estación meteorológica.
+    """
     base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/meteorologia'
     try:
         response = requests.get(base_url)
@@ -109,13 +112,13 @@ def get_max_precipitation_event_by_municipality(municipality_name: str) -> dict:
         }
 
 
-def get_rain_by_datetime(station_id: int, date_string: str, hora: str) -> dict:
+def get_rain_by_datetime(station_id: int, date_string: str, time: str) -> dict:
     """
     Consulta el nivel de lluvia registrado en una estación meteorológica en una fecha y hora específica.
     Parámetros:
         station_id: código de la estación
-        fecha: string en formato 'YYYY-MM-DD'
-        hora: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
+        date_string: string en formato 'YYYY-MM-DD'
+        time: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
     """
     # Calcular fecha siguiente para fecha__lt
     date = datetime.strptime(date_string, "%Y-%m-%d")
@@ -129,7 +132,7 @@ def get_rain_by_datetime(station_id: int, date_string: str, hora: str) -> dict:
         response.raise_for_status()
         values = response.json().get("values", [])
         # Construir el string de fecha completa en formato ISO
-        date_time = f"{date_string}T{hora.zfill(2)}:00:00Z"
+        date_time = f"{date_string}T{time.zfill(2)}:00:00Z"
         for reg in values:
             if reg.get("fecha") == date_time:
                 return {

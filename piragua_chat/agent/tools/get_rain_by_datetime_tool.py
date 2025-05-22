@@ -8,8 +8,8 @@ get_rain_by_datetime_tool = StructuredTool.from_function(
     description="""Consulta el nivel de lluvia registrado en una estación meteorológica en una fecha y hora específica.
     Parámetros:
         station_id: código de la estación (int)
-        fecha: string en formato 'YYYY-MM-DD'
-        hora: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
+        date_string: string en formato 'YYYY-MM-DD'
+        time: string en formato 'HH' (hora en 24h, ej: '10' para 10am)
     Retorna el valor de lluvia para esa fecha y hora exacta.
     """,
 )
