@@ -23,7 +23,11 @@ def get_handwritten_text_from_image_aws(file_path):
     )
 
     # Print text
+    text = ""
     print("Extracted text:")
     for block in response["Blocks"]:
         if block["BlockType"] == "LINE":
+            text += block["Text"] + "\n"
             print(block["Text"])
+
+    return text

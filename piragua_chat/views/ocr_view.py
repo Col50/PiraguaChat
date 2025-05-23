@@ -54,8 +54,8 @@ class WhatsAppOCRView(APIView):
                 {"error": f"Error downloading image: {str(e)}"}, status=500
             )
 
-        text = get_handwritten_text_from_image(file_path)
-        # text = get_handwritten_text_from_image_aws(file_path)
+        # text = get_handwritten_text_from_image(file_path)
+        text = get_handwritten_text_from_image_aws(file_path)
 
         if text is None:
             return JsonResponse({"error": "OCR failed"}, status=500)

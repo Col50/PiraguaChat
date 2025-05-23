@@ -9,4 +9,4 @@ psycopg2-binary>=2.9.6
 tzdata>=2024.1
 langchain_openai>=0.3.16
 google-cloud-vision>=3.0.2
-boto3
+boto3==1.38.22
