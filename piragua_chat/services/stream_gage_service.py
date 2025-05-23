@@ -1,6 +1,6 @@
 import os
 import requests
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.common_utility_service import normalize_text
 from datetime import datetime, timedelta
 import psycopg2
 from dotenv import load_dotenv
@@ -15,7 +15,7 @@ DB_CONFIG = {
 }
 
 
-def get_station_codes_by_source(source_name: str) -> list:
+def get_station_codes_by_water_source_name(source_name: str) -> list:
     """
     Busca todos los códigos de estación por nombre de fuente (río/quebrada).
     """
@@ -39,12 +39,12 @@ def get_stream_gage(station_id: int) -> dict:
     """
     Consulta el caudal y nivel de una estación de monitoreo.
     """
-
     base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{station_id}/nivel'
     try:
         response = requests.get(base_url)
         response.raise_for_status()
         values = response.json().get("values", [])
+        print(f"Valores: {values}")
         if not values:
             return {"error": "No se encontraron registros para la estación."}
         # Buscar el registro con la fecha más reciente

@@ -2,7 +2,7 @@ import os
 import requests
 
 
-def get_municipality() -> dict:
+def get_municipalities() -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/municipios'
     params = {"simple": "simple"}
     try:

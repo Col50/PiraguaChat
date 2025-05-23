@@ -1,8 +1,8 @@
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.common_utility_service import normalize_text
 from piragua_chat.services.station_by_municipality_service import (
     get_station_codes_by_municipality,
 )
-from piragua_chat.services.municipality_service import get_municipality
+from piragua_chat.services.municipality_service import get_municipalities
 
 
 TIPO_MAP = {
@@ -20,12 +20,12 @@ def get_station_count_by_type(municipality_name: str, type_name: str) -> dict:
     tipo_nombre: nombre del tipo de estación (ej: 'pluviográfica', 'limnigráfica', etc)
     """
     # 1. Buscar municipio por nombre (normalizando)
-    municipalitys = get_municipality().get("municipality", [])
+    municipalities = get_municipalities().get("municipality", [])
     municipality_name_normalized = normalize_text(municipality_name)
     municipality = next(
         (
             m
-            for m in municipalitys
+            for m in municipalities
             if normalize_text(m.get("nombre", "")) == municipality_name_normalized
         ),
         None,

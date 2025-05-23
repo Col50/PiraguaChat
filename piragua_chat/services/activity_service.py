@@ -1,7 +1,7 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.common_utility_service import normalize_text
 from piragua_chat.services.monitored_sources_service import get_municipality_id_by_name
 
 load_dotenv()

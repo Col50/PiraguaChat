@@ -1,23 +1,25 @@
 import os
 import requests
-from piragua_chat.services.municipality_service import get_municipality
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.municipality_service import get_municipalities
+from piragua_chat.services.common_utility_service import normalize_text
 from piragua_chat.services.station_by_municipality_service import (
     get_station_codes_by_municipality,
 )
 
 
-def count_thresholds_by_municipality(municipality_name: str, threshold: str) -> dict:
+def get_thresholds_count_by_municipality(
+    municipality_name: str, threshold: str
+) -> dict:
     """
     Cuenta los umbrales (ROJO, NARANJA, AMARILLO) reportados en todos los puntos de monitoreo de un municipio.
     """
     # 1. Buscar municipio por nombre (normalizando)
-    municipalitys = get_municipality().get("municipality", [])
+    municipalities = get_municipalities().get("municipality", [])
     municipality_name_normalized = normalize_text(municipality_name)
     municipality = next(
         (
             m
-            for m in municipalitys
+            for m in municipalities
             if normalize_text(m.get("nombre", "")) == municipality_name_normalized
         ),
         None,
@@ -38,11 +40,11 @@ def count_thresholds_by_municipality(municipality_name: str, threshold: str) -> 
     thresholds_url = f'{os.getenv("BASE_API_URL")}/umbrales'
     for code in codes:
         try:
-            resp = requests.get(
+            response = requests.get(
                 thresholds_url, params={"estacion": code, "umbral": threshold.upper()}
             )
-            resp.raise_for_status()
-            thresholds = resp.json().get("values", [])
+            response.raise_for_status()
+            thresholds = response.json().get("values", [])
             total += len(thresholds)
         except requests.RequestException:
             continue

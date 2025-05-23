@@ -1,7 +1,7 @@
 import os
 from traceback import print_tb
 import requests
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.common_utility_service import normalize_text
 
 
 def get_physicochemical_report(report_id: str) -> dict:
@@ -53,16 +53,15 @@ def get_last_water_quality_measurement(source_name: str) -> dict:
     Consulta la última medición de calidad en los puntos de monitoreo (por nombre de fuente) y resume todos los parámetros disponibles.
     Si hay varias estaciones, toma la medición más reciente entre todas.
     """
-    stations_code = get_station_code_by_water_monitoring_name(source_name)
-    print(f"stations_code {stations_code}")
+    station_codes = get_station_code_by_water_monitoring_name(source_name)
 
-    if not stations_code:
+    if not station_codes:
         return {"error": "No se encontraron estaciones para la fuente indicada."}
 
     latest = None
     latest_station = None
 
-    for station_code in stations_code:
+    for station_code in station_codes:
         base_url = (
             f'{os.getenv("BASE_API_URL")}/fisicoquimicos/{station_code}/resultados'
         )

@@ -1,7 +1,7 @@
 import os
 import requests
-from piragua_chat.services.municipality_service import get_municipality
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.municipality_service import get_municipalities
+from piragua_chat.services.common_utility_service import normalize_text
 import psycopg2
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
@@ -98,7 +98,7 @@ def get_max_precipitation_event_by_municipality(municipality_name: str) -> dict:
         return {"error": f"Error al consultar la base de datos"}
 
 
-def get_rain_by_datetime(station_id: int, date_string: str, time: str) -> dict:
+def get_rain_level_by_datetime(station_id: int, date_string: str, time: str) -> dict:
     """
     Consulta el nivel de lluvia registrado en una estación meteorológica en una fecha y hora específica.
     Parámetros:

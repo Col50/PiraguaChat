@@ -2,7 +2,7 @@ import os
 import requests
 
 
-def get_faq(question: str) -> dict:
+def get_faqs(question: str) -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/faqs'
     try:
         response = requests.get(base_url)

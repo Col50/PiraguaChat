@@ -1,7 +1,7 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
-from piragua_chat.services.normalize_text_service import normalize_text
+from piragua_chat.services.common_utility_service import normalize_text
 
 load_dotenv()
 DB_CONFIG = {
@@ -38,7 +38,7 @@ def get_municipality_id_by_name(municipality_name: str):
     return None
 
 
-def get_monitored_sources(municipality_name: str) -> dict:
+def get_monitored_water_sources(municipality_name: str) -> dict:
     """
     Devuelve la lista de fuentes (quebradas/ríos) monitoreadas en el municipio dado.
     """
@@ -106,7 +106,7 @@ def get_monitoring_points_location(municipality_name: str) -> dict:
         return {"error": f"Error al consultar la base de datos"}
 
 
-def get_count_monitored_sources(municipality_name: str) -> dict:
+def get_monitored_sources_count(municipality_name: str) -> dict:
     """
     Devuelve la cantidad de fuentes (quebradas/ríos) monitoreadas en el municipio dado.
     """

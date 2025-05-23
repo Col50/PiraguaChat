@@ -1,5 +1,5 @@
 from langchain.tools import StructuredTool
-from piragua_chat.services.municipality_activities_service import (
+from piragua_chat.services.activity_service import (
     get_activities_by_municipality,
 )
 

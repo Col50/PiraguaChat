@@ -2,7 +2,7 @@ import os
 import requests
 
 
-def get_territorial() -> dict:
+def get_territories() -> dict:
     base_url = f'{os.getenv("BASE_API_URL")}/territoriales'
     try:
         response = requests.get(base_url)
