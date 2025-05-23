@@ -2,6 +2,17 @@ import os
 import requests
 from piragua_chat.services.normalize_text_service import normalize_text
 from datetime import datetime, timedelta
+import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv()
+DB_CONFIG = {
+    "dbname": os.getenv("DB_NAME_PIRAGUA"),
+    "user": os.getenv("DB_USER_PIRAGUA"),
+    "password": os.getenv("DB_PASSWORD_PIRAGUA"),
+    "host": os.getenv("DB_HOST_PIRAGUA"),
+    "port": int(os.getenv("DB_PORT")),
+}
 
 
 def get_station_codes_by_source(source_name: str) -> list:
@@ -52,76 +63,72 @@ def get_max_flow_by_source(source_name: str) -> dict:
     """
     Busca el evento de caudal máximo registrado en cualquier estación de monitoreo de la fuente dada.
     """
-    codes = get_station_codes_by_source(source_name)
-    if not codes:
-        return {"error": f"No se encontró estación para la fuente '{source_name}'."}
-    max_record = None
-    max_flow = float("-inf")
-    code_max = None
-    for code in codes:
-        base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{code}/nivel/diario/'
-        try:
-            response = requests.get(base_url)
-            response.raise_for_status()
-            values = response.json().get("values", [])
-            if not values:
-                continue
-            record = max(
-                values, key=lambda x: float(x.get("caudal", "-999.0"))
-            )  # obtiene el registro con el caudal máximo
-            flow = float(record.get("caudal", "-999.0"))
-            if flow > max_flow:
-                max_flow = flow
-                max_record = record
-                code_max = code
-        except requests.RequestException:
-            continue
-    if max_record:
+    source_name_normalized = normalize_text(source_name)
+    try:
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT nd.*
+            FROM niveles_diarios nd
+            JOIN estaciones e ON nd.estacion_id = e.id
+            WHERE translate(lower(e.fuente), 'áéíóúÁÉÍÓÚñÑ', 'aeiouaeiounn') = %s
+            ORDER BY nd.caudal DESC
+            LIMIT 1;
+            """,
+            (source_name_normalized,),
+        )
+        row = cursor.fetchone()
+        if row:
+            max_flow = [{"fecha": row[1], "caudal": row[3]}]
+        else:
+            max_flow = []
+
+        cursor.close()
+        connection.close()
+        if not max_flow:
+            return {"error": "No se encontraron fuentes de monitoreo."}
         return {
-            "fecha": max_record.get("fecha"),
-            "caudal_maximo": max_record.get("caudal"),
-            "codigo_estacion": code_max,
+            "formaciones": max_flow,
         }
-    else:
-        return {"error": "No se encontraron registros de caudal para las estaciones."}
+    except Exception as e:
+        return {"error": f"Error al consultar la base de datos"}
 
 
 def get_min_flow_by_source(source_name: str) -> dict:
     """
     Busca el evento de caudal mínimo registrado en cualquier estación de monitoreo de la fuente dada.
     """
-    codes = get_station_codes_by_source(source_name)
-    if not codes:
-        return {"error": f"No se encontró estación para la fuente '{source_name}'."}
-    min_record = None
-    min_flow = float("-inf")
-    code_min = None
-    for code in codes:
-        base_url = f'{os.getenv("BASE_API_URL")}/estaciones/{code}/nivel/diario/'
-        try:
-            response = requests.get(base_url)
-            response.raise_for_status()
-            values = response.json().get("values", [])
-            if not values:
-                continue
-            record = min(
-                values, key=lambda x: float(x.get("caudal", "-999.0"))
-            )  # obtiene el registro con el caudal máximo
-            flow = float(record.get("caudal", "-999.0"))
-            if flow > min_flow:
-                min_flow = flow
-                min_record = record
-                code_min = code
-        except requests.RequestException:
-            continue
-    if min_record:
+    source_name_normalized = normalize_text(source_name)
+    try:
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT nd.*
+            FROM niveles_diarios nd
+            JOIN estaciones e ON nd.estacion_id = e.id
+            WHERE translate(lower(e.fuente), 'áéíóúÁÉÍÓÚñÑ', 'aeiouaeiounn') = %s
+            ORDER BY nd.caudal ASC
+            LIMIT 1;
+            """,
+            (source_name_normalized,),
+        )
+        row = cursor.fetchone()
+        if row:
+            min_flow = [{"fecha": row[1], "caudal": row[3]}]
+        else:
+            min_flow = []
+
+        cursor.close()
+        connection.close()
+        if not min_flow:
+            return {"error": "No se encontraron fuentes de monitoreo."}
         return {
-            "fecha": min_record.get("fecha"),
-            "caudal_minimo": min_record.get("caudal"),
-            "codigo_estacion": code_min,
+            "formaciones": min_flow,
         }
-    else:
-        return {"error": "No se encontraron registros de caudal para las estaciones."}
+    except Exception as e:
+        return {"error": f"Error al consultar la base de datos"}
 
 
 def get_flow_by_datetime(station_id: int, date_string: str, time: str) -> dict:
