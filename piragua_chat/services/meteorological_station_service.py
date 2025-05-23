@@ -2,10 +2,18 @@ import os
 import requests
 from piragua_chat.services.municipality_service import get_municipality
 from piragua_chat.services.normalize_text_service import normalize_text
-from piragua_chat.services.station_by_municipality_service import (
-    get_station_codes_by_municipality,
-)
+import psycopg2
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
+
+load_dotenv()
+DB_CONFIG = {
+    "dbname": os.getenv("DB_NAME_PIRAGUA"),
+    "user": os.getenv("DB_USER_PIRAGUA"),
+    "password": os.getenv("DB_PASSWORD_PIRAGUA"),
+    "host": os.getenv("DB_HOST_PIRAGUA"),
+    "port": int(os.getenv("DB_PORT")),
+}
 
 
 def get_meteorological_station(station_id: int) -> dict:
@@ -57,59 +65,37 @@ def get_max_precipitation_event_by_municipality(municipality_name: str) -> dict:
     """
     Busca el evento de precipitación más fuerte registrado en cualquier estación meteorológica del municipio.
     """
-    # 1. Buscar municipio por nombre (normalizando)
-    municipalitys = get_municipality().get("municipality", [])
     municipality_name_normalized = normalize_text(municipality_name)
-    municipality = next(
-        (
-            m
-            for m in municipalitys
-            if normalize_text(m.get("nombre", "")) == municipality_name_normalized
-        ),
-        None,
-    )
-    if not municipality:
-        return {"error": f"No se encontró el municipio'{municipality_name}'."}
-    municipality_id = municipality.get("id")
-    if not municipality_id:
-        return {"error": "El municipio no tiene un ID válido."}
+    try:
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT md.*
+            FROM meteorologias_diarios md
+            JOIN estaciones e ON md.estacion_id = e.id
+            JOIN municipios m ON e.municipio_id = m.id
+            WHERE translate(lower(m.nombre), 'áéíóúÁÉÍÓÚñÑ', 'aeiouaeiounn') = %s
+            ORDER BY md.lluvia DESC
+            LIMIT 1;
+            """,
+            (municipality_name_normalized,),
+        )
+        row = cursor.fetchone()
+        if row:
+            max_flow = [{"fecha": row[1], "lluvia": row[12]}]
+        else:
+            max_flow = []
 
-    # 2. Buscar estaciones meteorológicas del municipio usando el nuevo servicio
-    codes = get_station_codes_by_municipality(municipality_id, "8")
-    if not codes:
+        cursor.close()
+        connection.close()
+        if not max_flow:
+            return {"error": "No se encontraron fuentes de monitoreo."}
         return {
-            "error": "No se encontraron estaciones meteorológicas para el municipio."
+            "formaciones": max_flow,
         }
-
-    # 3. Buscar el evento de precipitación máxima en todas las estaciones
-    max_precipitation = float("-inf")
-    max_event = None
-    code_max = None
-
-    # Llama una sola vez con todos los códigos
-    all_records = get_all_meteorological_station_records(codes)
-    for code, registers in all_records.items():
-        for register in registers:
-            try:
-                precipitation = float(register.get("lluvia", "-999.0"))
-            except (TypeError, ValueError):
-                continue
-            if precipitation > max_precipitation:
-                max_precipitation = precipitation
-                max_event = register
-                code_max = code
-
-    if max_event:
-        return {
-            "municipio": municipality.get("nombre"),
-            "codigo_estacion": code_max,
-            "fecha": max_event.get("fecha"),
-            "precipitacion_maxima": max_event.get("lluvia"),
-        }
-    else:
-        return {
-            "error": "No se encontraron registros de precipitación para las estaciones del municipio."
-        }
+    except Exception as e:
+        return {"error": f"Error al consultar la base de datos"}
 
 
 def get_rain_by_datetime(station_id: int, date_string: str, time: str) -> dict:

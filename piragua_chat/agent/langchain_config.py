@@ -18,7 +18,7 @@ from piragua_chat.agent.tools.get_max_flow_tool import get_max_flow_tool
 from piragua_chat.agent.tools.get_min_flow_tool import get_min_flow_tool
 from piragua_chat.agent.tools.get_count_thresholds_tool import get_count_thresholds_tool
 from piragua_chat.agent.tools.get_max_precipitation_event_tool import (
-    get_max_precipitation_event_tool,
+    get_max_precipitation_event_by_municipality_tool,
 )
 
 from piragua_chat.agent.tools.get_rain_by_datetime_tool import get_rain_by_datetime_tool
@@ -68,7 +68,7 @@ tools = [
     get_min_flow_tool,
     get_weather_station_tool,
     get_count_thresholds_tool,
-    get_max_precipitation_event_tool,
+    get_max_precipitation_event_by_municipality_tool,
     get_rain_by_datetime_tool,
     get_flow_by_datetime_tool,
     get_water_quality_tool,

@@ -3,7 +3,7 @@ from piragua_chat.services.meteorological_station_service import (
     get_max_precipitation_event_by_municipality,
 )
 
-get_max_precipitation_event_tool = StructuredTool.from_function(
+get_max_precipitation_event_by_municipality_tool = StructuredTool.from_function(
     func=get_max_precipitation_event_by_municipality,
     name="evento_maximo_precipitacion_municipio",
     description="""Devuelve el evento de precipitación más fuerte registrado en cualquier estación meteorológica de un municipio.
