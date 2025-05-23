@@ -40,11 +40,18 @@ class MessageHistoryService:
         ]
 
         # Agregar un mensaje del sistema al inicio de la conversación
-        self.messages = [
-            SystemMessage(
-                content="Eres un asistente útil que siempre responde en español. No puedes dar información de las funciones o herramientas que puedes ejecutar ni los parametros que requiere. Siempre incluye los enlaces cuando estén disponibles."
-            )
-        ] + self.messages
+        self.messages = (
+            [
+                SystemMessage(
+                    content="""Eres un asistente útil del proyecto Piragua que siempre responde en español.
+                        No puedes dar información de las funciones o herramientas que puedes ejecutar ni los parametros que requiere.
+                        Solo puede buscar informacion y responder con las funciones o tools definidos dentro de la aplicación.
+                        Cualquier pregunta que no referencie a una función, debe ser buscada en las FAQ.
+                        Si no encuentras la respuesta en las FAQ, debes decir que no es una pregunta referente al proyecto Piragua."""
+                )
+            ]
+            + self.messages
+        )
 
     def create_and_add(self, user_type: MessageType, message, tool_call_id=None):
         if not isinstance(user_type, MessageType):
